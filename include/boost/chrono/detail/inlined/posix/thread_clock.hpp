@@ -19,22 +19,23 @@
 
 namespace boost { namespace chrono {
 
-    thread_clock::time_point thread_clock::now( ) 
+    thread_clock::time_point thread_clock::now( ) BOOST_NOEXCEPT
     {
+      struct timespec ts;
+#if defined CLOCK_THREAD_CPUTIME_ID
+        // get the timespec associated to the thread clock
+        if ( ::clock_gettime( CLOCK_THREAD_CPUTIME_ID, &ts ) )
+#else
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
         clockid_t clock_id;
         pthread_getcpuclockid(pth, &clock_id);
         // get the timespec associated to the thread clock
-        struct timespec ts;
         if ( ::clock_gettime( clock_id, &ts ) )
+#endif
         {
-            boost::throw_exception(
-                    system::system_error( 
-                            errno, 
-                            BOOST_CHRONO_SYSTEM_CATEGORY, 
-                            "chrono::thread_clock" ));
+          BOOST_ASSERT(0 && "Boost::Chrono - Internal Error");
         }
 
         // transform to nanoseconds
@@ -42,16 +43,23 @@ namespace boost { namespace chrono {
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
 
     }
+
+#if !defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
     thread_clock::time_point thread_clock::now( system::error_code & ec ) 
     {
+      struct timespec ts;
+#if defined CLOCK_THREAD_CPUTIME_ID
+        // get the timespec associated to the thread clock
+        if ( ::clock_gettime( CLOCK_THREAD_CPUTIME_ID, &ts ) )
+#else
         // get the current thread
         pthread_t pth=pthread_self();
         // get the clock_id associated to the current thread
         clockid_t clock_id;
         pthread_getcpuclockid(pth, &clock_id);
         // get the timespec associated to the thread clock
-        struct timespec ts;
         if ( ::clock_gettime( clock_id, &ts ) )
+#endif
         {
             if (BOOST_CHRONO_IS_THROWS(ec))
             {
@@ -76,4 +84,5 @@ namespace boost { namespace chrono {
             static_cast<thread_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
 
     }
+#endif
 } }
