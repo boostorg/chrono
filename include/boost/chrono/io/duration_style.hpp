@@ -1,7 +1,5 @@
-//  chrono_io
-//
 //  (C) Copyright Howard Hinnant
-//  (C) Copyright 2010-2011 Vicente J. Botet Escriba
+//  (C) Copyright 2011 Vicente J. Botet Escriba
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt).
@@ -36,4 +34,4 @@ namespace boost
 
 }
 
-#endif  // BOOST_CHRONO_CHRONO_IO_HPP
+#endif  // header

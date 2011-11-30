@@ -1,4 +1,4 @@
-//  boost/chrono/stopwatches/stopwatch_formatter.hpp  ------------------------------------------------------------//
+//  boost/chrono/stopwatches/formatters/ accumulator_set_formatter.hpp  ------------------------------------------------------------//
 //  Copyright 2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -90,6 +90,7 @@ namespace boost
 
         typedef typename Stopwatch::duration duration_t;
 
+        duration_style_io_saver dsios(this->os_);
         this->os_
             << static_cast<format_type&> (*this)
                 % boost::accumulators::count(acc)

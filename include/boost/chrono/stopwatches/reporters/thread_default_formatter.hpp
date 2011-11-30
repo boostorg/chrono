@@ -1,4 +1,4 @@
-//  boost/chrono/stopwatches/stopwatch_reporter.hpp
+//  boost/chrono/stopwatches/reporters/thread_default_formatter.hpp
 //  Copyright 2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  (See accompanying file LICENSE_1_0.txt or
@@ -7,6 +7,8 @@
 
 #ifndef BOOST_CHRONO_STOPWATCHES_REPORTERS_THREAD_DEFAULT_FORMATTER_HPP
 #define BOOST_CHRONO_STOPWATCHES_REPORTERS_THREAD_DEFAULT_FORMATTER_HPP
+
+#include <boost/chrono/config.hpp>
 
 #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
 

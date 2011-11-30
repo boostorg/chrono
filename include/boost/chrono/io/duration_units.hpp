@@ -1,4 +1,3 @@
-//
 //  (C) Copyright Howard Hinnant
 //  (C) Copyright 2011 Vicente J. Botet Escriba
 //  Use, modification and distribution are subject to the Boost Software License,
@@ -10,507 +9,562 @@
 #define BOOST_CHRONO_IO_DURATION_UNITS_HPP
 
 #include <boost/chrono/config.hpp>
+#include <boost/ratio/ratio_io.hpp>
 #include <boost/chrono/duration.hpp>
 #include <boost/chrono/io/duration_style.hpp>
-#include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/io/ios_base_state.hpp>
 #include <string>
-#include <iostream>
-//#include <locale>
-#include <boost/utility/enable_if.hpp>
+#include <ios>
+#include <locale>
+#include <algorithm>
 
 namespace boost
 {
   namespace chrono
   {
-    template <typename Period>
-    struct is_localizable: false_type
+    class rt_ratio
     {
-    };
-
-    template <>
-    struct is_localizable<atto> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<femto> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<pico> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<nano> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<micro> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<milli> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<centi> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<deci> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<ratio<1> > : true_type
-    {
-    };
-    template <>
-    struct is_localizable<deca> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<hecto> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<kilo> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<mega> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<giga> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<tera> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<peta> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<exa> : true_type
-    {
-    };
-    template <>
-    struct is_localizable<ratio<60> > : true_type
-    {
-    };
-    template <>
-    struct is_localizable<ratio<3600> > : true_type
-    {
-    };
-
-    namespace detail
-    {
-
-      class rt_ratio
+    public:
+      template <typename Period>
+      rt_ratio(Period const&) :
+        num(Period::type::num), den(Period::type::den)
       {
-      public:
-        template <typename Period>
-        rt_ratio(Period const&) :
-          num(Period::type::num), den(Period::type::den)
-        {
-        }
+      }
 
-        rt_ratio(intmax_t n = 0, intmax_t d = 0) :
-          num(n), den(d)
-        {
-        }
+      rt_ratio(intmax_t n = 0, intmax_t d = 0) :
+        num(n), den(d)
+      {
+      }
 
-        intmax_t num;
-        intmax_t den;
-      };
-    }
+      intmax_t num;
+      intmax_t den;
+    };
 
     /**
      * @c duration_units facet gives useful information about the duration units,
      * as the number of plural forms, the plural form associated to a duration,
      * the text associated to a plural form and a duration's period,
      */
-    template <typename CharT, class OutputIterator = std::ostreambuf_iterator<CharT> >
+    template <typename CharT = char>
     class duration_units: public std::locale::facet
     {
     public:
+      /**
+       * Type of character the facet is instantiated on.
+       */
       typedef CharT char_type;
-      typedef OutputIterator iter_type;
+      /**
+       * Type of character string passed to member functions.
+       */
+      typedef std::basic_string<CharT> string_type;
 
+      /**
+       * Unique identifier for this type of facet.
+       */
       static std::locale::id id;
 
+      /**
+       * Construct a @c duration_units facet.
+       * @param refs
+       * @Effects Construct a @c duration_units facet.
+       * If the @c refs argument is @c 0 then destruction of the object is
+       * delegated to the @c locale, or locales, containing it. This allows
+       * the user to ignore lifetime management issues. On the other had,
+       * if @c refs is @c 1 then the object must be explicitly deleted;
+       * the @c locale will not do so. In this case, the object can be
+       * maintained across the lifetime of multiple locales.
+       */
       explicit duration_units(size_t refs = 0) :
         std::locale::facet(refs)
       {
       }
 
-      /* TBR */
-      virtual bool swaps_value_unit_order() const = 0;
-
       /**
-       *
-       * @tparam Rep
-       * @tparam Period
-       * @Requires Rep must be explicitly convertible to int_least64_t.
-       * @Requires Period is named.
-       *
-       * @param s
-       * @param ios
-       * @param d
-       * @Effects puts the unit associated to the duration @c d in @c s taken in account the @c ios state flags.
-       * The implementation uses the non template virtual function do_put as if
-       * @code
-       *   return do_put(s, ios, get_duration_style(ios), Period(), int_least64_t(d.count()));
-       * @codeend
-       *
-       * where @get_duration_style gives the duration style associated to @ios.
-       * @return s
+       * @return pointer to the start of valid [N/D] units.
        */
-      template <typename Rep, typename Period>
-      typename enable_if<is_localizable<Period> , iter_type>::type put(iter_type s, std::ios_base& ios,
-          duration<Rep, Period> const& d) const
-      {
-        return do_put(s, ios, get_duration_style(ios), Period(), int_least64_t(d.count()));
-      }
-
+      virtual const string_type* get_n_d_valid_units_start() const =0;
       /**
-       *
-       * @tparam Rep
-       * @tparam Period
-       * @Requires Rep must be explicitly convertible to int_least64_t.
-       * @Requires Period is not named, that is its textual representation is in the form [N/D].
-       *
-       * @param s
-       * @param ios
-       * @param d
-       * @Effects puts the unit associated to the duration @c d in @c s taken in account the @c ios state flags.
-       * The implementation uses the non template virtual function do_put as if
-       * @code
-       *   return do_put(s, ios, get_duration_style(ios), detail::rt_ratio(Period()), int_least64_t(d.count()));
-       * @codeend
-       *
-       * where @get_duration_style gives the duration style associated to @ios and
-       * detail::rt_ratio is a class that flats the template ration on a run-time ration so we can use it in virtual functions.
-       * @return s
+       * @effect calls the do_...
+       * @return pointer to the end of valid [N/D] units.
        */
-      template <typename Rep, typename Period>
-      typename disable_if<is_localizable<Period> , iter_type>::type put(iter_type s, std::ios_base& ios,
-          duration<Rep, Period> const& d) const
-      {
-        return do_put(s, ios, get_duration_style(ios), detail::rt_ratio(Period()), int_least64_t(d.count()));
-      }
+      virtual const string_type* get_n_d_valid_units_end() const=0;
 
       /**
-       *
-       * @return the number of plural forms.
+       * @return pointer to the start of valid units, symbol or prefix with its different plural forms.
        */
-      std::size_t get_plural_forms() const
-      {
-        return do_get_plural_forms();
-      }
-
+      virtual const string_type* get_valid_units_start() const=0;
       /**
-       *
-       * @param value
-       * @return the associated plural form index.
+       * @return pointer to the end of valid units.
        */
-      std::size_t plural_form(int_least64_t value) const
-      {
-        return do_get_plural_form(value);
-      }
+      virtual const string_type* get_valid_units_end() const=0;
 
       /**
-       *
-       * @param style
-       * @param pf
-       * @return the translation associated to the plural form given as parameter.
+       * @param k the found pointer to the [N/D] unit.
+       * @return true if @c k matches a valid unit.
        */
-      template <typename Period>
-      typename enable_if<is_localizable<Period> , std::basic_string<CharT> >::type get_plural_form(
-          duration_style_type style, std::size_t pf) const
-      {
-        return do_get_plural_form(style, Period(), pf);
-      }
+      virtual bool match_n_d_valid_unit(const string_type* k) const = 0;
+      /**
+       * @param k the found pointer to the unit.
+       * @Effects @c rt is set to the valid Period when the @c k matches a valid unit.
+       * @return true if @c k matches a valid unit.
+       */
+      virtual bool match_valid_unit(const string_type* k, rt_ratio& rt) const = 0;
 
       /**
-       *
+       * @effect calls the do_...
        * @return the pattern to be used by default.
        */
-      std::basic_string<CharT> get_pattern() const
+      virtual string_type get_pattern() const=0;
+
+      /**
+       * @effect calls the do_...
+       * @return the unit associated to this duration.
+       */
+      template <typename Rep, typename Period>
+      string_type get_unit(duration_style::type style, duration<Rep, Period> const& d) const
       {
-        return do_get_pattern();
+        return do_get_unit(style, rt_ratio(Period()), static_cast<intmax_t>(d.count()));
+      }
+      /**
+       * @effect calls the do_...
+       * @return the [N/D] suffix unit associated to this duration.
+       */
+      template <typename Rep, typename Period>
+      string_type get_n_d_unit(duration_style::type style, duration<Rep, Period> const& d) const
+      {
+        return do_get_n_d_unit(style, rt_ratio(Period()), static_cast<intmax_t>(d.count()));
       }
 
+      /**
+       * @effect calls the do_...
+       * @return true if the unit associated to the given Period is named, false otherwise.
+       */
+      template <typename Period>
+      bool is_named_unit() const
+      {
+        return do_is_named_unit(rt_ratio(Period()));
+      }
+
+
     protected:
-      virtual std::basic_string<CharT> do_get_pattern() const=0;
-      virtual std::size_t do_get_plural_forms() const = 0;
-      virtual std::size_t do_get_plural_form(int_least64_t value) const = 0;
 
-      // used for ouput
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, atto, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, femto, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, pico, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, nano, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, micro, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, milli, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, centi, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, deci, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, ratio<1> , int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, deca, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, hecto, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, kilo, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, mega, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, tera, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, peta, int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, exa, int_least64_t) const = 0;
-      virtual iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, detail::rt_ratio,
-          int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, ratio<60> , int_least64_t) const = 0;
-      virtual iter_type
-      do_put(iter_type s, std::ios_base& ios, duration_style_type style, ratio<3600> , int_least64_t) const = 0;
-
-      // used for input
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, atto, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, femto, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, pico, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, nano, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, micro, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, milli, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, centi, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, deci, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, ratio<1> , std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, deca, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, hecto, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, kilo, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, mega, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, giga, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, tera, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, peta, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, exa, std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, ratio<60> , std::size_t pf) const = 0;
-      virtual std::basic_string<CharT> do_get_plural_form(duration_style_type style, ratio<3600> , std::size_t pf) const = 0;
+      /**
+       * @Effects Destroys the facet
+       */
+      virtual ~duration_units()
+      {
+      }
+      /**
+       * @return the [N/D] suffix unit associated to this duration.
+       */
+      virtual string_type do_get_n_d_unit(duration_style::type style, rt_ratio rt, intmax_t v) const = 0;
+      /**
+       * @return the unit associated to this duration.
+       */
+      virtual string_type do_get_unit(duration_style::type style,rt_ratio rt, intmax_t v) const = 0;
+      /**
+       * @return true if the unit associated to the given Period is named, false otherwise.
+       */
+      virtual bool do_is_named_unit(rt_ratio rt) const =0;
 
     };
 
-    template <typename CharT, class OutputIterator>
-    std::locale::id duration_units<CharT, OutputIterator>::id;
+    template <typename CharT>
+    std::locale::id duration_units<CharT>::id;
 
-    ///////////////////////////
-    // This class is used to define the strings for the default English
-    template <typename CharT, class OutputIterator = std::ostreambuf_iterator<CharT> >
-    class duration_units_default: public duration_units<CharT, OutputIterator>
+    namespace detail
     {
-    public:
-      typedef CharT char_type;
-      typedef OutputIterator iter_type;
+      template<typename CharT>
+      struct duration_units_default_holder
+      {
+        typedef std::basic_string<CharT> string_type;
+        static string_type* n_d_valid_units_;
+        static string_type* valid_units_;
+        static bool initialized_;
+      };
+      template <typename CharT>
+      typename duration_units_default_holder<CharT>::string_type* duration_units_default_holder<CharT>::n_d_valid_units_=0;
+      template <typename CharT>
+      typename duration_units_default_holder<CharT>::string_type* duration_units_default_holder<CharT>::valid_units_=0;
+      template<typename CharT>
+      bool duration_units_default_holder<CharT>::initialized_ = false;
+    }
 
+    /**
+     * This class is used to define the strings for the default English
+     */
+    template <typename CharT = char>
+    class duration_units_default: public duration_units<CharT>
+    {
+    protected:
+      static const std::size_t pfs_ = 2;
+
+    public:
+      /**
+       * Type of character the facet is instantiated on.
+       */
+      typedef CharT char_type;
+      /**
+       * Type of character string passed to member functions.
+       */
+      typedef std::basic_string<CharT> string_type;
+
+      /**
+       * Construct a @c duration_units_default facet.
+       * @param refs
+       * @Effects Construct a @c duration_units_default facet.
+       * If the @c refs argument is @c 0 then destruction of the object is
+       * delegated to the @c locale, or locales, containing it. This allows
+       * the user to ignore lifetime management issues. On the other had,
+       * if @c refs is @c 1 then the object must be explicitly deleted;
+       * the @c locale will not do so. In this case, the object can be
+       * maintained across the lifetime of multiple locales.
+       */
       explicit duration_units_default(size_t refs = 0) :
         duration_units<CharT> (refs)
       {
       }
-      bool swaps_value_unit_order() const
+
+      /**
+       * Destroys the facet.
+       */
+      ~duration_units_default()
       {
-        return false;
       }
 
-    protected:
-      std::size_t do_get_plural_forms() const
+    public:
+
+      /**
+       * @param k the found pointer to the [N/D] unit.
+       * @return true if @c k matches a valid unit.
+       */
+      bool match_n_d_valid_unit(const string_type* k) const
       {
-        return 2;
+        std::size_t index = (k - get_n_d_valid_units_start()) / (pfs_ + 1);
+        switch (index)
+        {
+        case 0:
+          break;
+        default:
+          return false;
+        }
+        return true;
+      }
+      /**
+       * @param k the found pointer to the unit.
+       * @Effects @c rt is set to the valid Period when the @c k matches a valid unit.
+       * @return true if @c k matches a valid unit.
+       */
+      bool match_valid_unit(const string_type* k, rt_ratio& rt) const
+      {
+        std::size_t index = (k - get_valid_units_start()) / (pfs_ + 1);
+        switch (index)
+        {
+        case 0:
+          rt = rt_ratio(atto());
+          break;
+        case 1:
+          rt = rt_ratio(femto());
+          break;
+        case 2:
+          rt = rt_ratio(pico());
+          break;
+        case 3:
+          rt = rt_ratio(nano());
+          break;
+        case 4:
+          rt = rt_ratio(micro());
+          break;
+        case 5:
+          rt = rt_ratio(milli());
+          break;
+        case 6:
+          rt = rt_ratio(centi());
+          break;
+        case 7:
+          rt = rt_ratio(deci());
+          break;
+        case 8:
+          rt = rt_ratio(deca());
+          break;
+        case 9:
+          rt = rt_ratio(hecto());
+          break;
+        case 10:
+          rt = rt_ratio(kilo());
+          break;
+        case 11:
+          rt = rt_ratio(mega());
+          break;
+        case 12:
+          rt = rt_ratio(giga());
+          break;
+        case 13:
+          rt = rt_ratio(tera());
+          break;
+        case 14:
+          rt = rt_ratio(peta());
+          break;
+        case 15:
+          rt = rt_ratio(exa());
+          break;
+        case 16:
+          rt = rt_ratio(ratio<1> ());
+          break;
+        case 17:
+          rt = rt_ratio(ratio<60> ());
+          break;
+        case 18:
+          rt = rt_ratio(ratio<3600> ());
+          break;
+        default:
+          return false;
+        }
+        return true;
       }
 
-      std::size_t do_get_plural_form(int_least64_t value) const
+      /**
+       * @return pointer to the start of valid [N/D] units.
+       */
+      virtual const string_type* get_n_d_valid_units_start()const
       {
-        return (value == -1 || value == 1) ? 0 : 1;
+        return  detail::duration_units_default_holder<CharT>::n_d_valid_units_;
+      }
+      /**
+       * @return pointer to the end of valid [N/D] units.
+       */
+      virtual const string_type* get_n_d_valid_units_end()const
+      {
+        return detail::duration_units_default_holder<CharT>::n_d_valid_units_ + (pfs_ + 1);
       }
 
-      std::basic_string<CharT> do_get_pattern() const
+      /**
+       * @return pointer to the start of valid units.
+       */
+      virtual string_type* get_valid_units_start() const
+      {
+        return detail::duration_units_default_holder<CharT>::valid_units_;
+      }
+      /**
+       * @return pointer to the end of valid units.
+       */
+      virtual string_type* get_valid_units_end() const
+      {
+        return detail::duration_units_default_holder<CharT>::valid_units_ + 19 * (pfs_ + 1);
+      }
+
+      string_type get_pattern() const
       {
         static const CharT t[] =
         { '%', 'v', ' ', '%', 'u' };
-        static const std::basic_string<CharT> pattern(t, t + sizeof (t) / sizeof (t[0]));
+        static const string_type pattern(t, t + sizeof (t) / sizeof (t[0]));
 
         return pattern;
       }
 
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, atto u, int_least64_t value) const
+    protected:
+      /**
+       *
+       * This facet names the units associated to the following periods:
+       * atto,femto,pico,nano,micro,milli,centi,deci,ratio<1>,deca,hecto,kilo,mega,giga,tera,peta,exa,ratio<60> and ratio<3600>.
+       * @return true if the unit associated to the given Period is named, false otherwise.
+       */
+      bool do_is_named_unit(rt_ratio rt) const
       {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, femto u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, pico u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
+        if (rt.num==1) {
+          switch (rt.den)
+          {
+          case BOOST_RATIO_INTMAX_C(1):
+          case BOOST_RATIO_INTMAX_C(10):
+          case BOOST_RATIO_INTMAX_C(100):
+          case BOOST_RATIO_INTMAX_C(1000):
+          case BOOST_RATIO_INTMAX_C(1000000):
+          case BOOST_RATIO_INTMAX_C(1000000000):
+          case BOOST_RATIO_INTMAX_C(1000000000000):
+          case BOOST_RATIO_INTMAX_C(1000000000000000):
+          case BOOST_RATIO_INTMAX_C(1000000000000000000):
+            return true;
+          default:
+            return false;
+          }
+        } else if (rt.den==1) {
+          switch (rt.num)
+          {
+          case BOOST_RATIO_INTMAX_C(10):
+          case BOOST_RATIO_INTMAX_C(60):
+          case BOOST_RATIO_INTMAX_C(100):
+          case BOOST_RATIO_INTMAX_C(1000):
+          case BOOST_RATIO_INTMAX_C(3600):
+          case BOOST_RATIO_INTMAX_C(1000000):
+          case BOOST_RATIO_INTMAX_C(1000000000):
+          case BOOST_RATIO_INTMAX_C(1000000000000):
+          case BOOST_RATIO_INTMAX_C(1000000000000000):
+          case BOOST_RATIO_INTMAX_C(1000000000000000000):
+            return true;
+          default:
+            return false;
+          }
+        }
+        return false;
+
       }
 
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, nano u, int_least64_t value) const
+      /**
+       * In English the suffix used after [N/D] is the one associated to the period ratio<1>.
+       * @return the [N/D] suffix unit associated to this duration.
+       */
+      string_type do_get_n_d_unit(duration_style::type style, rt_ratio, intmax_t v) const
       {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, micro u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, milli u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, centi u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, deci u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base&, duration_style_type style, ratio<1> u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_plural_form(style, u, do_get_plural_form(value));
-        return std::copy(str.begin(), str.end(), s);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, deca u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, hecto u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
+        return do_get_unit(style, ratio<1>(), do_get_plural_form(v));
       }
 
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, kilo u, int_least64_t value) const
+      /**
+       * @return the unit associated to this duration if it is named, "" otherwise.
+       */
+      string_type do_get_unit(duration_style::type style, rt_ratio rt, intmax_t v) const
       {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, mega u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, giga u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, tera u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, peta u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, exa u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_ratio_prefix(style, u);
-        std::copy(str.begin(), str.end(), s);
-        return do_put(s, ios, style, ratio<1> (), value);
-      }
-
-      iter_type do_put(iter_type s, std::ios_base&, duration_style_type style, ratio<60> u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_plural_form(style, u, do_get_plural_form(value));
-        return std::copy(str.begin(), str.end(), s);
-      }
-
-      iter_type do_put(iter_type s, std::ios_base&, duration_style_type style, ratio<3600> u, int_least64_t value) const
-      {
-        std::basic_string<CharT> str = do_get_plural_form(style, u, do_get_plural_form(value));
-        return std::copy(str.begin(), str.end(), s);
-      }
-
-      iter_type do_put(iter_type s, std::ios_base& ios, duration_style_type style, detail::rt_ratio rtr,
-          int_least64_t value) const
-      {
-        *s++ = CharT('[');
-        std::use_facet<std::num_put<CharT, iter_type> >(ios.getloc()).put(s, ios, ' ', rtr.num);
-        *s++ = CharT('/');
-        std::use_facet<std::num_put<CharT, iter_type> >(ios.getloc()).put(s, ios, ' ', rtr.den);
-        *s++ = CharT(']');
-
-        return do_put(s, ios, style, ratio<1> (), value);
+        if (rt.num==1) {
+          switch (rt.den)
+          {
+          case BOOST_RATIO_INTMAX_C(1):
+            return do_get_unit(style, ratio<1>(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(10):
+            return do_get_unit(style, deci(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(100):
+            return do_get_unit(style, centi(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(1000):
+            return do_get_unit(style, milli(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(1000000):
+            return do_get_unit(style, micro(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(1000000000):
+            return do_get_unit(style, nano(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(1000000000000):
+            return do_get_unit(style, pico(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(1000000000000000):
+            return do_get_unit(style, femto(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(1000000000000000000):
+            return do_get_unit(style, atto(), do_get_plural_form(v));
+          default:
+            ;
+          }
+        } else if (rt.den==1) {
+          switch (rt.num)
+          {
+          case BOOST_RATIO_INTMAX_C(10):
+             return do_get_unit(style, deca(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(60):
+            return do_get_unit(style, ratio<60>(), do_get_plural_form(v));
+          case BOOST_RATIO_INTMAX_C(100):
+             return do_get_unit(style, hecto(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(1000):
+             return do_get_unit(style, kilo(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(3600):
+             return do_get_unit(style, ratio<3600>(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(1000000):
+             return do_get_unit(style, mega(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(1000000000):
+             return do_get_unit(style, giga(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(1000000000000):
+             return do_get_unit(style, tera(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(1000000000000000):
+             return do_get_unit(style, peta(), do_get_plural_form(v));
+           case BOOST_RATIO_INTMAX_C(1000000000000000000):
+             return do_get_unit(style, exa(), do_get_plural_form(v));
+           default:
+             ;
+           }
+        }
+        throw "exception";
       }
 
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, ratio<1> , std::size_t pf) const
+    protected:
+      /**
+       * @return the number of associated plural forms this facet manages.
+       */
+      virtual std::size_t do_get_plural_forms() const
+      {
+        return static_get_plural_forms();
+      }
+      static std::size_t static_get_plural_forms()
+      {
+        return pfs_;
+      }
+      /**
+       * Gets the associated plural form.
+       * @param value the duration representation
+       * @return the plural form associated to the @c value parameter. In English there are 2 plural forms
+       * 0 singular (-1 or 1)
+       * 1 plural for all others
+       */
+      virtual std::size_t do_get_plural_form(int_least64_t value) const
+      {
+        return static_get_plural_form(value);
+      }
+      static std::size_t static_get_plural_form(int_least64_t value)
+      {
+        return (value == -1 || value == 1) ? 0 : 1;
+      }
+
+      /**
+       * @param style the duration style.
+       * @param period the period associated to the duration seconds.
+       * @param pf the requested plural form.
+       * @return if style is symbol returns "s", otherwise if pf is 0 return "second", if pf is 1 "seconds"
+       */
+      virtual string_type do_get_unit(duration_style_type style, ratio<1> u, std::size_t pf) const
+      {
+        return static_get_unit(style,u,pf);
+      }
+      static string_type static_get_unit(duration_style_type style, ratio<1> , std::size_t pf)
       {
         static const CharT t[] =
         { 's' };
-        static const std::basic_string<CharT> symbol(t, t + sizeof (t) / sizeof (t[0]));
+        static const string_type symbol(t, t + sizeof (t) / sizeof (t[0]));
         static const CharT u[] =
         { 's', 'e', 'c', 'o', 'n', 'd' };
-        static const std::basic_string<CharT> singular(u, u + sizeof (u) / sizeof (u[0]));
+        static const string_type singular(u, u + sizeof (u) / sizeof (u[0]));
         static const CharT v[] =
         { 's', 'e', 'c', 'o', 'n', 'd', 's' };
-        static const std::basic_string<CharT> plural(v, v + sizeof (v) / sizeof (v[0]));
+        static const string_type plural(v, v + sizeof (v) / sizeof (v[0]));
 
-        if (style == duration_style::symbol) return symbol;
-        if (pf == 0) return singular;
-        if (pf == 1) return plural;
+        if (style == duration_style::symbol)
+        {
+          return symbol;
+        }
+        if (pf == 0)
+        {
+          return singular;
+        }
+        if (pf == 1)
+        {
+          return plural;
+        }
         // assert
         throw "exception";
       }
 
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, ratio<60> , std::size_t pf) const
+      /**
+       * @param style the duration style.
+       * @param period the period associated to the duration minutes.
+       * @param pf the requested plural form.
+       * @return if style is symbol returns "min", otherwise if pf is 0 return "minute", if pf is 1 "minutes"
+       */
+      virtual string_type do_get_unit(duration_style_type style, ratio<60> u, std::size_t pf) const
+      {
+        return static_get_unit(style,u,pf);
+      }
+      static string_type static_get_unit(duration_style_type style, ratio<60> , std::size_t pf)
       {
         static const CharT t[] =
         { 'm', 'i', 'n' };
-        static const std::basic_string<CharT> symbol(t, t + sizeof (t) / sizeof (t[0]));
+        static const string_type symbol(t, t + sizeof (t) / sizeof (t[0]));
 
         static const CharT u[] =
         { 'm', 'i', 'n', 'u', 't', 'e' };
-        static const std::basic_string<CharT> singular(u, u + sizeof (u) / sizeof (u[0]));
+        static const string_type singular(u, u + sizeof (u) / sizeof (u[0]));
         static const CharT v[] =
         { 'm', 'i', 'n', 'u', 't', 'e', 's' };
-        static const std::basic_string<CharT> plural(v, v + sizeof (v) / sizeof (v[0]));
+        static const string_type plural(v, v + sizeof (v) / sizeof (v[0]));
 
         if (style == duration_style::symbol) return symbol;
         if (pf == 0) return singular;
@@ -519,17 +573,27 @@ namespace boost
         throw "exception";
       }
 
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, ratio<3600> , std::size_t pf) const
+      /**
+       * @param style the duration style.
+       * @param period the period associated to the duration hours.
+       * @param pf the requested plural form.
+       * @return if style is symbol returns "h", otherwise if pf is 0 return "hour", if pf is 1 "hours"
+       */
+      virtual string_type do_get_unit(duration_style_type style, ratio<3600> u, std::size_t pf) const
+      {
+        return static_get_unit(style,u,pf);
+      }
+      static string_type static_get_unit(duration_style_type style, ratio<3600> , std::size_t pf)
       {
         static const CharT t[] =
         { 'h' };
-        static const std::basic_string<CharT> symbol(t, t + sizeof (t) / sizeof (t[0]));
+        static const string_type symbol(t, t + sizeof (t) / sizeof (t[0]));
         static const CharT u[] =
         { 'h', 'o', 'u', 'r' };
-        static const std::basic_string<CharT> singular(u, u + sizeof (u) / sizeof (u[0]));
+        static const string_type singular(u, u + sizeof (u) / sizeof (u[0]));
         static const CharT v[] =
         { 'h', 'o', 'u', 'r', 's' };
-        static const std::basic_string<CharT> plural(v, v + sizeof (v) / sizeof (v[0]));
+        static const string_type plural(v, v + sizeof (v) / sizeof (v[0]));
 
         if (style == duration_style::symbol) return symbol;
         if (pf == 0) return singular;
@@ -537,402 +601,382 @@ namespace boost
         // assert
         throw "exception";
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, atto u, std::size_t pf) const
+      /**
+       * @param style the duration style.
+       * @param u the period tag atto.
+       * @param pf the requested plural form.
+       * @return the concatenation of the prefix associated to @c period + the one associated to seconds.
+       */
+      virtual string_type do_get_unit(duration_style_type style, atto u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, femto u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, atto u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, pico u, std::size_t pf) const
+      /**
+       * @param style the duration style.
+       * @param u the period tag femto.
+       * @param pf the requested plural form.
+       * @return the concatenation of the prefix associated to period @c u + the one associated to seconds.
+       */
+      virtual string_type do_get_unit(duration_style_type style, femto u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, nano u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, femto u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, micro u, std::size_t pf) const
+      /**
+       * @param style the duration style.
+       * @param u the period tag femto.
+       * @param pf the requested plural form.
+       * @return the concatenation of the prefix associated to period @c u + the one associated to seconds.
+       */
+      virtual string_type do_get_unit(duration_style_type style, pico u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, milli u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, pico u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, centi u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style_type style, nano u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, deci u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, nano u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, deca u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style_type style, micro u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, hecto u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, micro u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, kilo u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style_type style, milli u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, mega u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, milli u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, giga u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style_type style, centi u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, tera u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, centi u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, peta u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style_type style, deci u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
       }
-      std::basic_string<CharT> do_get_plural_form(duration_style_type style, exa u, std::size_t pf) const
+      static string_type static_get_unit(duration_style_type style, deci u, std::size_t pf)
       {
-        return do_get_ratio_prefix(style, u) + do_get_plural_form(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, deca u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, deca u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, hecto u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, hecto u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, kilo u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, kilo u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, mega u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, mega u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, giga u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, giga u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, tera u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, tera u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, peta u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, peta u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+      }
+      virtual string_type do_get_unit(duration_style_type style, exa u, std::size_t pf) const
+      {
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+      }
+      static string_type static_get_unit(duration_style_type style, exa u, std::size_t pf)
+      {
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
       }
 
     protected:
 
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, atto) const
+      /**
+       * @param style the duration style.
+       * @param u the period tag atto.
+       * @return depending on the value of @c style return the ratio_string symbol or prefix.
+       */
+      virtual string_type do_get_ratio_prefix(duration_style_type style, atto u) const
       {
-        static const CharT u[] =
-        { 'a', 't', 't', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'a' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, femto) const
+      static string_type static_get_ratio_prefix(duration_style_type style, atto)
       {
-        static const CharT u[] =
-        { 'f', 'e', 'm', 't', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'f' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<atto, CharT>::symbol();
+        return ratio_string<atto, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, pico) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, femto u) const
       {
-        static const CharT u[] =
-        { 'p', 'i', 'c', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'p' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, nano) const
+      static string_type static_get_ratio_prefix(duration_style_type style, femto)
       {
-        static const CharT u[] =
-        { 'n', 'a', 'n', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'n' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<femto, CharT>::symbol();
+        return ratio_string<femto, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, micro) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, pico u) const
       {
-        static const CharT u[] =
-        { 'm', 'i', 'c', 'r', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'u' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, milli) const
+      static string_type static_get_ratio_prefix(duration_style_type style, pico)
       {
-        static const CharT u[] =
-        { 'm', 'i', 'l', 'l', 'i' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'm' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<pico, CharT>::symbol();
+        return ratio_string<pico, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, centi) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, nano u) const
       {
-        static const CharT u[] =
-        { 'c', 'e', 'n', 't', 'i' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'c' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, deci) const
+      static string_type static_get_ratio_prefix(duration_style_type style, nano)
       {
-        static const CharT u[] =
-        { 'd', 'e', 'c', 'i' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'd' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<nano, CharT>::symbol();
+        return ratio_string<nano, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, deca) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, micro u) const
       {
-        static const CharT u[] =
-        { 'd', 'e', 'c', 'a' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'd', 'a' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, hecto) const
+      static string_type static_get_ratio_prefix(duration_style_type style, micro)
       {
-        static const CharT u[] =
-        { 'h', 'e', 'c', 't', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'h' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<micro, CharT>::symbol();
+        return ratio_string<micro, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, kilo) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, milli u) const
       {
-        static const CharT u[] =
-        { 'k', 'i', 'l', 'o' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'k' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, mega) const
+      static string_type static_get_ratio_prefix(duration_style_type style, milli)
       {
-        static const CharT u[] =
-        { 'm', 'e', 'g', 'a' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'M' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<milli, CharT>::symbol();
+        return ratio_string<milli, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, giga) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, centi u) const
       {
-        static const CharT u[] =
-        { 'g', 'i', 'g', 'a' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'G' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, tera) const
+      static string_type static_get_ratio_prefix(duration_style_type style, centi)
       {
-        static const CharT u[] =
-        { 't', 'e', 'r', 'a' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'T' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<centi, CharT>::symbol();
+        return ratio_string<centi, CharT>::prefix();
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, peta) const
+      virtual string_type do_get_ratio_prefix(duration_style_type style, deci u) const
       {
-        static const CharT u[] =
-        { 'p', 'e', 't', 'a' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'P' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        return static_get_ratio_prefix(style, u);
       }
-      virtual std::basic_string<CharT> do_get_ratio_prefix(duration_style_type style, exa) const
+      static string_type static_get_ratio_prefix(duration_style_type style, deci)
       {
-        static const CharT u[] =
-        { 'e', 'x', 'a' };
-        static const std::basic_string<CharT> prefix(u, u + sizeof (u) / sizeof (u[0]));
-        static const CharT v[] =
-        { 'E' };
-        static const std::basic_string<CharT> symbol(v, v + sizeof (v) / sizeof (v[0]));
-
-        if (style == duration_style::symbol) return symbol;
-        return prefix;
+        if (style == duration_style::symbol) return ratio_string<deci, CharT>::symbol();
+        return ratio_string<deci, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, deca u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, deca)
+      {
+        if (style == duration_style::symbol) return ratio_string<deca, CharT>::symbol();
+        return ratio_string<deca, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, hecto u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, hecto)
+      {
+        if (style == duration_style::symbol) return ratio_string<hecto, CharT>::symbol();
+        return ratio_string<hecto, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, kilo u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, kilo)
+      {
+        if (style == duration_style::symbol) return ratio_string<kilo, CharT>::symbol();
+        return ratio_string<kilo, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, mega u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, mega)
+      {
+        if (style == duration_style::symbol) return ratio_string<mega, CharT>::symbol();
+        return ratio_string<mega, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, giga u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, giga)
+      {
+        if (style == duration_style::symbol) return ratio_string<giga, CharT>::symbol();
+        return ratio_string<giga, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, tera u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, tera)
+      {
+        if (style == duration_style::symbol) return ratio_string<tera, CharT>::symbol();
+        return ratio_string<tera, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, peta u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, peta)
+      {
+        if (style == duration_style::symbol) return ratio_string<peta, CharT>::symbol();
+        return ratio_string<peta, CharT>::prefix();
+      }
+      virtual string_type do_get_ratio_prefix(duration_style_type style, exa u) const
+      {
+        return static_get_ratio_prefix(style, u);
+      }
+      static string_type static_get_ratio_prefix(duration_style_type style, exa)
+      {
+        if (style == duration_style::symbol) return ratio_string<exa, CharT>::symbol();
+        return ratio_string<exa, CharT>::prefix();
       }
 
+    protected:
+      template <typename Period>
+      string_type* fill_units(string_type* it, Period) const
+      {
+        std::size_t pfs = do_get_plural_forms();
+        for (std::size_t pf = 0; pf < pfs; ++pf)
+        {
+          *it++ = do_get_unit(duration_style::prefix, Period(), pf);
+        }
+        *it++ = do_get_unit(duration_style::symbol, Period(), 0);
+        return it;
+      }
+    public:
+      template <typename Period>
+      static string_type* static_fill_units(string_type* it, Period)
+      {
+        std::size_t pfs = static_get_plural_forms();
+        for (std::size_t pf = 0; pf < pfs; ++pf)
+        {
+          *it++ = static_get_unit(duration_style::prefix, Period(), pf);
+        }
+        *it++ = static_get_unit(duration_style::symbol, Period(), 0);
+        return it;
+      }
+      static string_type* static_init_valid_units(string_type* it)
+      {
+        it = static_fill_units(it, atto());
+        it = static_fill_units(it, femto());
+        it = static_fill_units(it, pico());
+        it = static_fill_units(it, nano());
+        it = static_fill_units(it, micro());
+        it = static_fill_units(it, milli());
+        it = static_fill_units(it, centi());
+        it = static_fill_units(it, deci());
+        it = static_fill_units(it, deca());
+        it = static_fill_units(it, hecto());
+        it = static_fill_units(it, kilo());
+        it = static_fill_units(it, mega());
+        it = static_fill_units(it, giga());
+        it = static_fill_units(it, tera());
+        it = static_fill_units(it, peta());
+        it = static_fill_units(it, exa());
+        it = static_fill_units(it, ratio<1> ());
+        it = static_fill_units(it, ratio<60> ());
+        it = static_fill_units(it, ratio<3600> ());
+        return it;
+      }
     };
 
-#if   defined BOOST_CHRONO_IS_LOCALIZABLE_VIRTUAL
+    namespace detail
+    {
 
-  template <typename CharT, typename T>
-  std::basic_string<CharT> to_basic_string(T const&v, std::locale const &loc)
-  {
-    std::basic_ostringstream<CharT> os;
-    os.imbue(loc);
-    os << v;
-    return os.str();
-  }
+      template<typename CharT>
+      struct duration_units_default_initializer_t
+      {
+        duration_units_default_initializer_t()
+          {
+              if (!duration_units_default_holder<CharT>::initialized_)
+              {
+                typedef typename duration_units_default_holder<CharT>::string_type string_type;
+                duration_units_default_holder<CharT>::n_d_valid_units_ = new string_type[3];
+                duration_units_default_holder<CharT>::valid_units_ = new string_type[19 * 3];
 
-  template <typename CharT, typename Rep, typename Period>
-  typename enable_if<is_localizable<Period>, std::basic_string<CharT> >::type
-  to_basic_string(
-      duration_style_type style,
-      duration<Rep,Period> value,
-      std::locale const &loc
-  )
-  {
-    std::locale nloc;
-    if (!std::has_facet<duration_units<CharT> >(loc))
-    {
-      nloc =std::locale(loc, new duration_units_default<CharT>());
-    }
-    else
-    {
-      nloc=loc;
-    }
-    duration_units<CharT> const & f = std::use_facet<duration_units<CharT> >(nloc);
+                string_type* it = duration_units_default_holder<CharT>::n_d_valid_units_;
+                it = duration_units_default<CharT>::static_fill_units(it, ratio<1> ());
+                it = duration_units_default<CharT>::static_init_valid_units(duration_units_default_holder<CharT>::valid_units_);
 
-    if (f.swaps_value_unit_order())
-    {
-      return f.to_string(style, Period(), int_least64_t(value.count())) + " " + to_basic_string<CharT>(value.count(), nloc);
+                duration_units_default_holder<CharT>::initialized_ = true;
+              }
+          }
+      };
+      namespace /**/
+      {
+        duration_units_default_initializer_t<char> duration_units_default_initializer;
+        duration_units_default_initializer_t<wchar_t> wduration_units_default_initializer;
+      } // namespace
     }
-    else
-    {
-      return to_basic_string<CharT>(value.count(), nloc) + " " + f.to_string(style, Period(), int_least64_t(value.count()));
-    }
-  }
-
-  template <typename CharT, typename Rep, typename Period>
-  typename disable_if<is_localizable<Period> , std::basic_string<CharT> >::type
-  to_basic_string(
-      duration_style_type style,
-      duration<Rep,Period> value,
-      std::locale const& loc
-  )
-  {
-    std::locale nloc;
-    if (!std::has_facet<duration_units<CharT> >(loc))
-    {
-      nloc =std::locale(loc, new duration_units_default<CharT>());
-    }
-    else
-    {
-      nloc=loc;
-    }
-    duration_units<CharT> const & f = std::use_facet<duration_units<CharT> >(nloc);
-    if (f.swaps_value_unit_order())
-    {
-      return f.to_string(style, detail::rt_ratio(Period()), int_least64_t(value.count())) + " " + to_basic_string<CharT>(value.count(), nloc);
-    }
-    else
-    {
-      return to_basic_string<CharT>(value.count(), nloc) + " " + f.to_string(style, detail::rt_ratio(Period()), int_least64_t(value.count()));
-    }
-  }
-
-  template <typename CharT, typename Rep, typename Period>
-  typename enable_if<is_localizable<Period>, std::basic_string<CharT> >::type
-  to_basic_string(
-      duration_style_type style,
-      duration<process_times<Rep>,Period> value,
-      std::locale const &loc
-  )
-  {
-    std::locale nloc;
-    if (!std::has_facet<duration_units<CharT> >(loc))
-    {
-      nloc =std::locale(loc, new duration_units_default<CharT>());
-    }
-    else
-    {
-      nloc=loc;
-    }
-    duration_units<CharT> const & f = std::use_facet<duration_units<CharT> >(nloc);
-
-    if (f.swaps_value_unit_order())
-    {
-      return f.to_string(style, nano(), int_least64_t(value.count())) + " " + to_basic_string<CharT>(value.count(), nloc);
-    }
-    else
-    {
-      return to_basic_string<CharT>(value.count(), nloc) + " " + f.to_string(style, nano(), int_least64_t(value.count()));
-    }
-  }
-
-  template <typename CharT, typename Rep, typename Period>
-  typename disable_if<is_localizable<Period> , std::basic_string<CharT> >::type
-  to_basic_string(
-      duration_style_type style,
-      duration<process_times<Rep>,Period> value,
-      std::locale const& loc
-  )
-  {
-    std::locale nloc;
-    if (!std::has_facet<duration_units<CharT> >(loc))
-    {
-      nloc =std::locale(loc, new duration_units_default<CharT>());
-    }
-    else
-    {
-      nloc=loc;
-    }
-    duration_units<CharT> const & f = std::use_facet<duration_units<CharT> >(nloc);
-    if (f.swaps_value_unit_order())
-    {
-      return f.to_string(style, detail::rt_ratio(nano()), int_least64_t(value.count())) + " " + to_basic_string<CharT>(value.count(), nloc);
-    }
-    else
-    {
-      return to_basic_string<CharT>(value.count(), nloc) + " " + f.to_string(style, detail::rt_ratio(nano()), int_least64_t(value.count()));
-    }
-  }
-
-  template <typename CharT, typename Rep, typename Period>
-  std::basic_string<CharT>
-  to_basic_string(duration_style_type style, duration<Rep,Period> value)
-  {
-    return to_basic_string<CharT>(style, value, std::locale());
-  }
-#endif
-
   } // chrono
 
 } // boost

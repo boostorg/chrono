@@ -1,15 +1,8 @@
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-//  Adaptation to Boost of the libcxx
-//  Copyright 2010 Vicente J. Botet Escriba
+//  Copyright 2010-2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
+
+#define BOOST_CHRONO_VERSION 2
 
 #include <iostream>
 #include <boost/type_traits/is_same.hpp>
@@ -134,7 +127,7 @@ void check_all(bool check=true)
 int main()
 {
   typedef simple_stopwatch<high_resolution_clock > Stopwatch;
-  typedef stopwatch_reporter_default_formatter<Stopwatch>::type Formatter;
+  typedef basic_stopwatch_reporter_default_formatter<char, Stopwatch>::type Formatter;
   typedef stopwatch_reporter<Stopwatch> Reporter;
   static Formatter fmtr;
 
@@ -157,7 +150,7 @@ int main()
   std::cout << "thread_clock=\n";
   check_all<thread_clock>(false);
 #endif
-    
+
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
   std::cout << "process_real_cpu_clock=\n";
   check_all<process_real_cpu_clock>(false);

@@ -1,4 +1,4 @@
-//  boost/chrono/stopwatches/stopwatch_formatter.hpp  ------------------------------------------------------------//
+//  boost/chrono/stopwatches/formatters/base_formatter.hpp  ------------------------------------------------------------//
 //  Copyright 2011 Vicente J. Botet Escriba
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -7,9 +7,9 @@
 #ifndef BOOST_CHRONO_STOPWATCHES_FORMATTERS_BASE_FORMATTER_HPP
 #define BOOST_CHRONO_STOPWATCHES_FORMATTERS_BASE_FORMATTER_HPP
 
+#include <boost/chrono/io/duration_style.hpp>
 #include <boost/chrono/duration.hpp>
 #include <boost/chrono/chrono_io.hpp>
-#include <boost/chrono/io/duration_io.hpp>
 #include <boost/cstdint.hpp>
 #include <iostream>
 #include <iomanip>

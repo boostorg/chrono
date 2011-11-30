@@ -13,6 +13,14 @@
 
 #include <boost/config.hpp>
 
+#if !defined BOOST_CHRONO_VERSION
+#define BOOST_CHRONO_VERSION 1
+#else
+#if BOOST_CHRONO_VERSION!=1  && BOOST_CHRONO_VERSION!=2
+#error "BOOST_CHRONO_VERSION must be 1 or 2"
+#endif
+#endif
+
 #if defined(BOOST_CHRONO_SOURCE) && !defined(BOOST_USE_WINDOWS_H)
 #define BOOST_USE_WINDOWS_H
 #endif
@@ -88,13 +96,7 @@
 #undef BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
 #endif
 
-// deprecated i/o
-#define BOOST_CHRONO_IO_V1_DONT_PROVIDE_DEPRECATED
-#define BOOST_CHRONO_IO_USE_XALLOC
-#define BOOST_CHRONO_USES_DURATION_PUT
-#define BOOST_CHRONO_USES_DURATION_GET
-//#define BOOST_CHRONO_IS_LOCALIZABLE_VIRTUAL
-//#define BOOST_CHRONO_IS_LOCALIZABLE_TRANSLATE
+//#undef BOOST_CHRONO_HAS_PROCESS_CLOCKS
 
 // unicode support  ------------------------------//
 
@@ -114,7 +116,7 @@
 
 #ifdef BOOST_CHRONO_HEADER_ONLY
 #define BOOST_CHRONO_INLINE inline
-#define BOOST_CHRONO_STATIC
+#define BOOST_CHRONO_STATIC inline
 #define BOOST_CHRONO_DECL
 
 #else
