@@ -11,7 +11,7 @@
  * @author  Krzysztof Czainski <1czajnik@gmail.com>
  */
 
-#include <iostream>
+#include <boost/cstdint.hpp>
 #include <boost/chrono/ceil.hpp>
 #include <boost/chrono/floor.hpp>
 #include <boost/chrono/round.hpp>
