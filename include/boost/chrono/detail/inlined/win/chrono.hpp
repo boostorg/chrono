@@ -38,11 +38,19 @@ namespace chrono_detail
     static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     boost::detail::winapi::LARGE_INTEGER_ pcount;
-    if ( (nanosecs_per_tic <= 0.0L) ||
-            (!boost::detail::winapi::QueryPerformanceCounter( &pcount )) )
+    if ( nanosecs_per_tic <= 0.0L )
     {
-      BOOST_ASSERT(0 && "Boost::Chrono - Internal Error");
+      BOOST_ASSERT(0 && "Boost::Chrono - get_nanosecs_per_tic Internal Error");
       return steady_clock::time_point();
+    }
+    unsigned times=0;
+    while ( ! boost::detail::winapi::QueryPerformanceCounter( &pcount ) )
+    {
+      if ( ++times > 3 )
+      {
+        BOOST_ASSERT(0 && "Boost::Chrono - QueryPerformanceCounter Internal Error");
+        return steady_clock::time_point();
+      }
     }
 
     return steady_clock::time_point(steady_clock::duration(
