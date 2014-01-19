@@ -83,12 +83,15 @@ namespace boost { namespace chrono {
                 : real(0)
                 , user(0)
                 , system(0){}
+
+#if ! defined BOOST_CHRONO_DONT_PROVIDES_DEPRECATED_IO_SINCE_V2_0_0
             template <typename Rep2>
             explicit process_times(
                 Rep2 r)
                 : real(r)
                 , user(r)
                 , system(r){}
+#endif
             template <typename Rep2>
             explicit process_times(
                 process_times<Rep2> const& rhs)
@@ -107,10 +110,12 @@ namespace boost { namespace chrono {
             rep   user;    // user cpu time
             rep system;  // system cpu time
 
+#if ! defined BOOST_CHRONO_DONT_PROVIDES_DEPRECATED_IO_SINCE_V2_0_0
             operator rep() const
             {
               return real;
             }
+#endif
             template <typename Rep2>
             bool operator==(process_times<Rep2> const& rhs) {
                 return (real==rhs.real &&
@@ -180,7 +185,7 @@ namespace boost { namespace chrono {
             }
 
             template <class CharT, class Traits>
-            void read(std::basic_istream<CharT, Traits>& is) const
+            void read(std::basic_istream<CharT, Traits>& is)
             {
                 typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
                 in_iterator i(is);
@@ -321,7 +326,7 @@ namespace chrono
     template <class CharT, class Traits, typename Rep>
     std::basic_istream<CharT, Traits>&
     operator>>(std::basic_istream<CharT, Traits>& is,
-        process_times<Rep> const& rhs)
+        process_times<Rep>& rhs)
     {
         rhs.read(is);
         return is;

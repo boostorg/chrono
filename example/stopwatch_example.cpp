@@ -51,10 +51,10 @@ int main()
   f1(1000);
   f1(2000);
   f1(3000);
-#ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS
+#ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS2
   std::cout << "main() Elapsed time: " << duration_cast<duration<process_times<double>,boost::ratio<1> > >(sw.elapsed()) << std::endl;
   std::cout << "main() Elapsed time: " << duration_cast<duration<process_times<nanoseconds::rep>,boost::milli> >(sw.elapsed()) << std::endl;
 #endif
-  //std::cout << "main() Elapsed time: " << sw.elapsed() << std::endl;
+  std::cout << "main() Elapsed time: " << sw.elapsed() << std::endl;
   return 0;
 }
