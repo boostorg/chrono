@@ -93,7 +93,7 @@
 #     undef BOOST_CHRONO_HAS_THREAD_CLOCK
 #     undef BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
 #   endif
-#   if defined(__HP_aCC) && defined(__hpux)
+#   if (defined(__HP_aCC) || defined(__GNUC__)) && defined(__hpux)
 #     undef BOOST_CHRONO_HAS_THREAD_CLOCK
 #     undef BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
 #   endif
@@ -107,22 +107,12 @@
 #undef BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
 #endif
 
-//#undef BOOST_CHRONO_HAS_PROCESS_CLOCKS
-
 // unicode support  ------------------------------//
 
 #if defined(BOOST_NO_CXX11_UNICODE_LITERALS) || defined(BOOST_NO_CXX11_CHAR16_T) || defined(BOOST_NO_CXX11_CHAR32_T)
 //~ #define BOOST_CHRONO_HAS_UNICODE_SUPPORT
 #else
 #define BOOST_CHRONO_HAS_UNICODE_SUPPORT 1
-#endif
-
-#if ! defined BOOST_NOEXCEPT
-#if defined(BOOST_NO_CXX11_NOEXCEPT)
-#define BOOST_NOEXCEPT
-#else
-#define BOOST_NOEXCEPT noexcept
-#endif
 #endif
 
 #if defined( BOOST_NO_CXX11_NUMERIC_LIMITS )
@@ -142,7 +132,6 @@
 #  define BOOST_CHRONO_LIB_NOEXCEPT_OR_THROW noexcept
 #endif
 #endif
-
 
 #if defined BOOST_CHRONO_PROVIDE_HYBRID_ERROR_HANDLING \
  && defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
