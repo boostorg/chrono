@@ -54,20 +54,6 @@ void test_good_system_clock(std::string str, D res)
   in >> tp;
   BOOST_TEST(in.eof());
   BOOST_TEST(!in.fail());
-  BOOST_TEST( (tp == boost::chrono::time_point<Clock, D>(res)));
-}
-
-#if BOOST_CHRONO_VERSION >= 2
-template <typename D>
-void test_good_system_clock(std::string str, D res)
-{
-  typedef boost::chrono::system_clock Clock;
-
-  std::istringstream in(str);
-  boost::chrono::time_point<Clock, D> tp;
-  in >> tp;
-  BOOST_TEST(in.eof());
-  BOOST_TEST(!in.fail());
   std::cout << "Input=    " << str << std::endl;
   std::cout << "Expected= " << boost::chrono::time_point<Clock, D>(res) << std::endl;
   std::cout << "Obtained= " << tp << std::endl;
