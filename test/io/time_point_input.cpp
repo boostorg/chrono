@@ -8,11 +8,48 @@
 #include <boost/chrono/system_clocks.hpp>
 #include <boost/chrono/thread_clock.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
-
+#if 0
 template <typename Clock, typename D>
 void test_good(std::string str, D res)
 {
+  typedef typename Clock::time_point clock_time_point;
+  typedef typename Clock::duration clock_duration;
   std::istringstream in(str + boost::chrono::clock_string<Clock, char>::since());
+  clock_time_point tp;
+  in >> tp;
+  BOOST_TEST(in.eof());
+  BOOST_TEST(!in.fail());
+  std::cout << "Input=    " << str << std::endl;
+  std::cout << "Expected= " << clock_time_point(boost::chrono::duration_cast<clock_duration>(res)) << std::endl;
+  std::cout << "Obtained= " << tp << std::endl;
+  BOOST_TEST( (tp == clock_time_point(boost::chrono::duration_cast<clock_duration>(res)) ));
+}
+
+#else
+template <typename Clock, typename D>
+void test_good(std::string str, D res)
+{
+  typedef boost::chrono::time_point<Clock, D> clock_time_point;
+  typedef typename Clock::duration clock_duration;
+  std::istringstream in(str + boost::chrono::clock_string<Clock, char>::since());
+  clock_time_point tp;
+  in >> tp;
+  BOOST_TEST(in.eof());
+  BOOST_TEST(!in.fail());
+  std::cout << "Input=    " << str << std::endl;
+  std::cout << "Expected= " << clock_time_point(res) << std::endl;
+  std::cout << "Obtained= " << tp << std::endl;
+  BOOST_TEST( tp == clock_time_point(res) );
+}
+
+#endif
+#if BOOST_CHRONO_VERSION >= 2
+template <typename D>
+void test_good_system_clock(std::string str, D res)
+{
+  typedef boost::chrono::system_clock Clock;
+
+  std::istringstream in(str);
   boost::chrono::time_point<Clock, D> tp;
   in >> tp;
   BOOST_TEST(in.eof());
@@ -129,6 +166,14 @@ void check_all()
 
 }
 
+void check_all_process_cpu_clock()
+{
+  using namespace boost::chrono;
+  using namespace boost;
+  typedef process_cpu_clock Clock;
+  //test_good<Clock> ("{5000;0;0} nanoseconds", process_cpu_clock::duration(process_cpu_clock::times(5000,0,0)));
+}
+
 #if BOOST_CHRONO_VERSION >= 2
 void check_all_system_clock()
 {
@@ -193,7 +238,7 @@ int main()
   std::cout << "process_system_cpu_clock=" << std::endl;
   check_all<boost::chrono::process_system_cpu_clock> ();
   std::cout << "process_cpu_clock=" << std::endl;
-  check_all<boost::chrono::process_cpu_clock> ();
+  //check_all_process_cpu_clock();
 #endif
 
   return boost::report_errors();
