@@ -458,7 +458,7 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run2-mt one_obj.cpp another_obj.cpp   : two_obj_p ]
         ;
 
-    #explicit "stopwatch" ;	
+    explicit "stopwatch" ;	
     test-suite "stopwatch"
         :
         [ stopwatch-run2 stopwatch/simple_stopwatch_pass.cpp  : simple_stopwatch_p ]
@@ -470,13 +470,13 @@ rule chrono-compile2 ( sources : name )
         [ stopwatch-run2 stopwatch/suspendable_stopwatch_pass.cpp  : suspendable_stopwatch_p ]
         ;
 
-    #explicit "stopwatch_ex" ;	
+    explicit "stopwatch_ex" ;	
     test-suite "stopwatch_ex"
         :
         [ stopwatch-run2 ../example/stopwatch_example.cpp  : stopwatch_example ]
         ;
 
-    #explicit "stopclock" ;	
+    explicit "stopclock" ;	
     test-suite "stopclock"
         :
         [ stopwatch-run2 stopwatch/basic_stopwatch_reporter_laps_accumulator_set_pass.cpp  : basic_stopwatch_reporter_laps_accumulator_set_p ]
@@ -491,7 +491,7 @@ rule chrono-compile2 ( sources : name )
 
         ;
 
-    #explicit "stopclock_ex" ;	
+    explicit "stopclock_ex" ;	
     test-suite "stopclock_ex"
         :
         [ stopwatch-run2 ../example/stopwatch_reporter_example.cpp  : stopwatch_reporter_example ]
