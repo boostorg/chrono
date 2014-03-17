@@ -35,7 +35,7 @@ namespace chrono_detail
 
   steady_clock::time_point steady_clock::now() BOOST_NOEXCEPT
   {
-    static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
+    double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     boost::detail::winapi::LARGE_INTEGER_ pcount;
     if ( nanosecs_per_tic <= 0.0L )
@@ -61,7 +61,7 @@ namespace chrono_detail
 #if !defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
   steady_clock::time_point steady_clock::now( system::error_code & ec )
   {
-    static double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
+    double nanosecs_per_tic = chrono_detail::get_nanosecs_per_tic();
 
     boost::detail::winapi::LARGE_INTEGER_ pcount;
     if ( (nanosecs_per_tic <= 0.0L)
