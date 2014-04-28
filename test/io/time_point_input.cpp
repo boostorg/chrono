@@ -1,4 +1,5 @@
 //  Copyright 2011 Vicente J. Botet Escriba
+//  Copyright (c) Microsoft Corporation
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
@@ -152,6 +153,7 @@ void check_all()
 
 }
 
+#if !defined(BOOST_WINAPI_FAMILY)
 void check_all_process_cpu_clock()
 {
   using namespace boost::chrono;
@@ -159,6 +161,7 @@ void check_all_process_cpu_clock()
   typedef process_cpu_clock Clock;
   //test_good<Clock> ("{5000;0;0} nanoseconds", process_cpu_clock::duration(process_cpu_clock::times(5000,0,0)));
 }
+#endif
 
 #if BOOST_CHRONO_VERSION >= 2
 void check_all_system_clock()
@@ -219,12 +222,14 @@ int main()
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
   std::cout << "process_real_cpu_clock=" << std::endl;
   check_all<boost::chrono::process_real_cpu_clock> ();
+#if !defined(BOOST_WINAPI_FAMILY) 
   std::cout << "process_user_cpu_clock=" << std::endl;
   check_all<boost::chrono::process_user_cpu_clock> ();
   std::cout << "process_system_cpu_clock=" << std::endl;
   check_all<boost::chrono::process_system_cpu_clock> ();
   std::cout << "process_cpu_clock=" << std::endl;
   //check_all_process_cpu_clock();
+#endif
 #endif
 
   return boost::report_errors();

@@ -1,5 +1,6 @@
 //  boost/chrono/stopwatches/simple_stopwatch.hpp  ------------------------------------------------------------//
 //  Copyright 2011 Vicente J. Botet Escriba
+//  Copyright (c) Microsoft Corporation
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //  See http://www.boost.org/libs/libs/chrono/stopwatches for documentation.
@@ -90,10 +91,12 @@ namespace boost
     typedef simple_stopwatch<high_resolution_clock> high_resolution_simple_stopwatch;
 
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
+    typedef simple_stopwatch<process_real_cpu_clock> process_real_cpu_simple_stopwatch; 
+#if !defined(BOOST_WINAPI_FAMILY)
     typedef simple_stopwatch<process_user_cpu_clock> process_user_cpu_simple_stopwatch;
     typedef simple_stopwatch<process_system_cpu_clock> process_system_cpu_simple_stopwatch;
-    typedef simple_stopwatch<process_real_cpu_clock> process_real_cpu_simple_stopwatch;
     typedef simple_stopwatch<process_cpu_clock> process_cpu_simple_stopwatch;
+#endif
 #endif
 
 #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
