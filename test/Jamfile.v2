@@ -58,9 +58,6 @@ project
         <toolset>intel:<cxxflags>-wd593,981
         <toolset>intel:<cxxflags>-wd1418
 	    <toolset>intel:<cxxflags>-wd2415
-        
-    : default-build
-        [ supported-windows-api ]
     ;
 
 rule chrono-run ( sources )
