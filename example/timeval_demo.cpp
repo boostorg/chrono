@@ -45,7 +45,7 @@ time2_demo contained this comment:
 
 namespace
 {
-  #if defined UNDER_CE || defined BOOST_WINAPI_FAMILY
+  #if defined UNDER_CE || defined BOOST_WINDOWS_RUNTIME
   // Windows CE and Windows store does not define timeval
   struct timeval {
           long    tv_sec;         /* seconds */

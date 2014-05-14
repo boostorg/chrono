@@ -13,7 +13,7 @@
 #include <boost/chrono/stopwatches/formatters/accumulator_set_formatter.hpp>
 #include <boost/chrono/stopwatches/collectors/laps_accumulator_set.hpp>
 #include <boost/chrono/stopwatches/laps_stopwatch.hpp>
-#ifndef BOOST_WINAPI_FAMILY
+#ifndef BOOST_WINDOWS_RUNTIME
 #include <boost/chrono/thread_clock.hpp>
 #endif
 

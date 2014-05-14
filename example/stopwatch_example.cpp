@@ -15,7 +15,7 @@
 using namespace boost::chrono;
 
 #ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS
-#if !defined(BOOST_WINAPI_FAMILY) 
+#if !defined(BOOST_WINDOWS_RUNTIME) 
 typedef process_cpu_clock clock_type; 
 #else 
 // Windows store doesn't support process_cpu_clock, default to high_resolution_clock. 

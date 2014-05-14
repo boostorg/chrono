@@ -13,6 +13,7 @@
 #define BOOST_CHRONO_CONFIG_HPP
 
 #include <boost/config.hpp>
+#include <boost/predef.h>
 
 #if !defined BOOST_CHRONO_VERSION
 #define BOOST_CHRONO_VERSION 1
@@ -65,7 +66,7 @@
 #     define BOOST_CHRONO_HAS_PROCESS_CLOCKS
 #   endif
 #   define BOOST_CHRONO_HAS_CLOCK_STEADY
-#   if !defined( BOOST_WINAPI_FAMILY )
+#   if !defined( BOOST_WINDOWS_RUNTIME )
 #     define BOOST_CHRONO_HAS_THREAD_CLOCK
 #   endif
 #   define BOOST_CHRONO_THREAD_CLOCK_IS_STEADY true

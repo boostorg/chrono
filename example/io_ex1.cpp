@@ -77,7 +77,7 @@ int main()
 #endif
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
     cout << "\nprocess_real_cpu_clock::now() = " << process_real_cpu_clock::now() << '\n';
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
     cout << "\nprocess_user_cpu_clock::now() = " << process_user_cpu_clock::now() << '\n';
     cout << "\nprocess_system_cpu_clock::now() = " << process_system_cpu_clock::now() << '\n';
     cout << "\nprocess_cpu_clock::now() = " << process_cpu_clock::now() << '\n';

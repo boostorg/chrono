@@ -44,7 +44,7 @@ namespace boost { namespace chrono {
 #endif
     };
 
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
     class BOOST_CHRONO_DECL process_user_cpu_clock {
     public:
         typedef nanoseconds                          duration;
@@ -300,7 +300,7 @@ namespace chrono
 
 
   typedef process_times<nanoseconds::rep> process_cpu_clock_times;
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
     class BOOST_CHRONO_DECL process_cpu_clock
     {
     public:
@@ -382,7 +382,7 @@ namespace chrono
       }
     };
 
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
     template<class CharT>
     struct clock_string<process_user_cpu_clock, CharT>
     {

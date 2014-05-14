@@ -21,7 +21,7 @@
 
 #include <boost/detail/winapi/GetLastError.hpp>
 #include <boost/detail/winapi/GetCurrentProcess.hpp>
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
 #include <boost/detail/winapi/GetProcessTimes.hpp>
 #endif
 
@@ -67,7 +67,7 @@ process_real_cpu_clock::time_point process_real_cpu_clock::now(
 }
 #endif
 
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
 process_user_cpu_clock::time_point process_user_cpu_clock::now() BOOST_NOEXCEPT
 {
 

@@ -97,7 +97,7 @@ namespace boost
 
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
     typedef strict_stopwatch<process_real_cpu_clock> process_real_cpu_strict_stopwatch; 
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
     typedef strict_stopwatch<process_user_cpu_clock> process_user_cpu_strict_stopwatch;
     typedef strict_stopwatch<process_system_cpu_clock> process_system_cpu_strict_stopwatch;
     typedef strict_stopwatch<process_cpu_clock> process_cpu_strict_stopwatch;

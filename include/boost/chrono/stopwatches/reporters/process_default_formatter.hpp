@@ -23,7 +23,7 @@ namespace boost
 {
   namespace chrono
   {
-#if !defined(BOOST_WINAPI_FAMILY)
+#if !defined(BOOST_WINDOWS_RUNTIME)
 
     template <typename CharT>
     struct basic_clock_default_formatter<CharT, process_cpu_clock>
