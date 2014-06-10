@@ -4,7 +4,7 @@
     "name": "Chrono",
     "authors": [
       "Howard Hinnant",
-      "Beman Dawes"
+      "Beman Dawes",
       "Vicente J. Botet Escriba"
     ],
     "maintainers": [
@@ -32,5 +32,5 @@
     "category": [
       "Domain"
     ]
-  },
+  }
 ]
