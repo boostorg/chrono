@@ -1,5 +1,5 @@
 //  Copyright 2011 Vicente J. Botet Escriba
-//  Copyright (c) Microsoft Corporation
+//  Copyright (c) Microsoft Corporation 2014
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
@@ -267,7 +267,7 @@ int main()
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
   std::cout << "process_real_cpu_clock=" << std::endl;
   check_all<boost::chrono::process_real_cpu_clock> ();
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
   std::cout << "process_user_cpu_clock=" << std::endl;
   check_all<boost::chrono::process_user_cpu_clock> ();
   std::cout << "process_system_cpu_clock=" << std::endl;

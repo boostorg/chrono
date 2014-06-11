@@ -2,7 +2,7 @@
 
 //  Copyright Beman Dawes 1994, 2006, 2008
 //  Copyright 2009-2010 Vicente J. Botet Escriba
-//  Copyright (c) Microsoft Corporation
+//  Copyright (c) Microsoft Corporation 2014
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -21,7 +21,7 @@
 
 #include <boost/detail/winapi/GetLastError.hpp>
 #include <boost/detail/winapi/GetCurrentProcess.hpp>
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
 #include <boost/detail/winapi/GetProcessTimes.hpp>
 #endif
 
@@ -67,7 +67,7 @@ process_real_cpu_clock::time_point process_real_cpu_clock::now(
 }
 #endif
 
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
 process_user_cpu_clock::time_point process_user_cpu_clock::now() BOOST_NOEXCEPT
 {
 

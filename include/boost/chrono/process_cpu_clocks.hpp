@@ -1,7 +1,7 @@
 //  boost/chrono/process_cpu_clocks.hpp  -----------------------------------------------------------//
 
 //  Copyright 2009-2011 Vicente J. Botet Escriba
-//  Copyright (c) Microsoft Corporation
+//  Copyright (c) Microsoft Corporation 2014
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -44,7 +44,7 @@ namespace boost { namespace chrono {
 #endif
     };
 
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
     class BOOST_CHRONO_DECL process_user_cpu_clock {
     public:
         typedef nanoseconds                          duration;
@@ -300,7 +300,7 @@ namespace chrono
 
 
   typedef process_times<nanoseconds::rep> process_cpu_clock_times;
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
     class BOOST_CHRONO_DECL process_cpu_clock
     {
     public:
@@ -382,7 +382,7 @@ namespace chrono
       }
     };
 
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
     template<class CharT>
     struct clock_string<process_user_cpu_clock, CharT>
     {

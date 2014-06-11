@@ -2,7 +2,7 @@
 
 //  Copyright 2010 Howard Hinnant
 //  Copyright 2010 Vicente J. Botet Escriba
-//  Copyright (c) Microsoft Corporation
+//  Copyright (c) Microsoft Corporation 2014
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
@@ -77,7 +77,7 @@ int main()
 #endif
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
     cout << "\nprocess_real_cpu_clock::now() = " << process_real_cpu_clock::now() << '\n';
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
     cout << "\nprocess_user_cpu_clock::now() = " << process_user_cpu_clock::now() << '\n';
     cout << "\nprocess_system_cpu_clock::now() = " << process_system_cpu_clock::now() << '\n';
     cout << "\nprocess_cpu_clock::now() = " << process_cpu_clock::now() << '\n';

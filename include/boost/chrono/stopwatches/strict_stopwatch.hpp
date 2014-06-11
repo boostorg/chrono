@@ -1,6 +1,6 @@
 //  boost/chrono/stopwatches/strict_stopwatch.hpp  ------------------------------------------------------------//
 //  Copyright 2011 Vicente J. Botet Escriba
-//  Copyright (c) Microsoft Corporation
+//  Copyright (c) Microsoft Corporation 2014
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //  See http://www.boost.org/libs/libs/chrono/stopwatches for documentation.
@@ -97,7 +97,7 @@ namespace boost
 
 #if defined(BOOST_CHRONO_HAS_PROCESS_CLOCKS)
     typedef strict_stopwatch<process_real_cpu_clock> process_real_cpu_strict_stopwatch; 
-#if !defined(BOOST_WINDOWS_RUNTIME)
+#if BOOST_PLAT_WINDOWS_DESKTOP
     typedef strict_stopwatch<process_user_cpu_clock> process_user_cpu_strict_stopwatch;
     typedef strict_stopwatch<process_system_cpu_clock> process_system_cpu_strict_stopwatch;
     typedef strict_stopwatch<process_cpu_clock> process_cpu_strict_stopwatch;
