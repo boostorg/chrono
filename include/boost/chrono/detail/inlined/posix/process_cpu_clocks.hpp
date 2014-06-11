@@ -22,7 +22,7 @@
 namespace boost { namespace chrono {
 namespace chrono_detail
 {
-  inline long tick_factor()        // multiplier to convert ticks
+  inline nanoseconds::rep tick_factor()        // multiplier to convert ticks
                             //  to nanoseconds; -1 if unknown
   {
     static long factor = 0;
@@ -281,7 +281,7 @@ process_cpu_clock::time_point process_cpu_clock::now() BOOST_NOEXCEPT
     }
     else
     {
-        long factor = chrono_detail::tick_factor();
+        nanoseconds::rep factor = chrono_detail::tick_factor();
         if ( factor != -1 )
         {
             time_point::rep r(

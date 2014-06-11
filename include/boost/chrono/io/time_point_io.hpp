@@ -36,7 +36,7 @@
 
 #define  BOOST_CHRONO_INTERNAL_TIMEGM \
      ( defined BOOST_WINDOWS && ! defined(__CYGWIN__) )  \
-  || ( (defined(sun) || defined(__sun)) && defined __GNUC__) \
+  || (defined(sun) || defined(__sun)) \
   || (defined __IBMCPP__) \
   || defined __ANDROID__
 
