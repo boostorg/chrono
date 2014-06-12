@@ -1,5 +1,6 @@
 //  boost/chrono/stopwatches/reporters/process_default_formatter.hpp
 //  Copyright 2011 Vicente J. Botet Escriba
+//  Copyright (c) Microsoft Corporation 2014
 //  Distributed under the Boost Software License, Version 1.0.
 //  (See accompanying file LICENSE_1_0.txt or
 //   copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,13 +23,15 @@ namespace boost
 {
   namespace chrono
   {
+#if BOOST_PLAT_WINDOWS_DESKTOP
 
     template <typename CharT>
     struct basic_clock_default_formatter<CharT, process_cpu_clock>
     {
       typedef basic_times_formatter<milli, CharT> type;
     };
-
+    
+#endif
   } // namespace chrono
 } // namespace boost
 

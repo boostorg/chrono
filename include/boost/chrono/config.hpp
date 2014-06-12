@@ -2,6 +2,7 @@
 
 //  Copyright Beman Dawes 2003, 2006, 2008
 //  Copyright 2009-2011 Vicente J. Botet Escriba
+//  Copyright (c) Microsoft Corporation 2014
 
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,6 +13,7 @@
 #define BOOST_CHRONO_CONFIG_HPP
 
 #include <boost/config.hpp>
+#include <boost/predef.h>
 
 #if !defined BOOST_CHRONO_VERSION
 #define BOOST_CHRONO_VERSION 1
@@ -64,7 +66,9 @@
 #     define BOOST_CHRONO_HAS_PROCESS_CLOCKS
 #   endif
 #   define BOOST_CHRONO_HAS_CLOCK_STEADY
-#   define BOOST_CHRONO_HAS_THREAD_CLOCK
+#   if BOOST_PLAT_WINDOWS_DESKTOP
+#     define BOOST_CHRONO_HAS_THREAD_CLOCK
+#   endif
 #   define BOOST_CHRONO_THREAD_CLOCK_IS_STEADY true
 # endif
 
