@@ -15,11 +15,11 @@
 using namespace boost::chrono;
 
 #ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS
-#if BOOST_PLAT_WINDOWS_DESKTOP 
-typedef process_cpu_clock clock_type; 
-#else 
-// Windows store doesn't support process_cpu_clock, default to high_resolution_clock. 
-typedef high_resolution_clock clock_type; 
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
+typedef process_cpu_clock clock_type;
+#else
+// Windows store doesn't support process_cpu_clock, default to high_resolution_clock.
+typedef high_resolution_clock clock_type;
 #endif
 #else
 typedef high_resolution_clock clock_type;

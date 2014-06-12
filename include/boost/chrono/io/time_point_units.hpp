@@ -105,7 +105,7 @@ namespace boost
        * @return The epoch string associated to the @c process_real_cpu_clock.
        */
       virtual string_type do_get_epoch(process_real_cpu_clock) const=0;
-#if BOOST_PLAT_WINDOWS_DESKTOP
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
       /**
        *
        * @param c a dummy instance of @c process_user_cpu_clock.
@@ -200,7 +200,7 @@ namespace boost
       {
         return clock_string<process_real_cpu_clock,CharT>::since();
       }
-#if BOOST_PLAT_WINDOWS_DESKTOP
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
       /**
        * @param c a dummy instance of @c process_user_cpu_clock.
        * @return The epoch string returned by @c clock_string<process_user_cpu_clock,CharT>::since().

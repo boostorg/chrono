@@ -13,7 +13,7 @@
 #include <boost/chrono/stopwatches/formatters/accumulator_set_formatter.hpp>
 #include <boost/chrono/stopwatches/collectors/laps_accumulator_set.hpp>
 #include <boost/chrono/stopwatches/laps_stopwatch.hpp>
-#if BOOST_PLAT_WINDOWS_DESKTOP
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
 #include <boost/chrono/thread_clock.hpp>
 #endif
 

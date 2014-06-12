@@ -44,7 +44,7 @@ namespace boost { namespace chrono {
 #endif
     };
 
-#if BOOST_PLAT_WINDOWS_DESKTOP
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
     class BOOST_CHRONO_DECL process_user_cpu_clock {
     public:
         typedef nanoseconds                          duration;
@@ -300,7 +300,7 @@ namespace chrono
 
 
   typedef process_times<nanoseconds::rep> process_cpu_clock_times;
-#if BOOST_PLAT_WINDOWS_DESKTOP
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
     class BOOST_CHRONO_DECL process_cpu_clock
     {
     public:
@@ -318,7 +318,7 @@ namespace chrono
 #endif
     };
 #endif
-    
+
     template <class CharT, class Traits, typename Rep>
     std::basic_ostream<CharT, Traits>&
     operator<<(std::basic_ostream<CharT, Traits>& os,
@@ -382,7 +382,7 @@ namespace chrono
       }
     };
 
-#if BOOST_PLAT_WINDOWS_DESKTOP
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
     template<class CharT>
     struct clock_string<process_user_cpu_clock, CharT>
     {
@@ -448,7 +448,7 @@ namespace chrono
       }
     };
 #endif
-    
+
 } // namespace chrono
 } // namespace boost
 
