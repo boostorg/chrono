@@ -1,6 +1,7 @@
 //  example/stopwatch_example.cpp  ---------------------------------------------------//
 //  Copyright Beman Dawes 2006, 2008
 //  Copyright 2009-2011 Vicente J. Botet Escriba
+//  Copyright (c) Microsoft Corporation 2014
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 //  See http://www.boost.org/libs/chrono/stopwatches for documentation.
@@ -14,7 +15,12 @@
 using namespace boost::chrono;
 
 #ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS
+#if ! BOOST_OS_WINDOWS || BOOST_PLAT_WINDOWS_DESKTOP
 typedef process_cpu_clock clock_type;
+#else
+// Windows store doesn't support process_cpu_clock, default to high_resolution_clock.
+typedef high_resolution_clock clock_type;
+#endif
 #else
 typedef high_resolution_clock clock_type;
 #endif
