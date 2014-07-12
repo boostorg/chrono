@@ -38,7 +38,8 @@
      ( defined BOOST_WINDOWS && ! defined(__CYGWIN__) )  \
   || (defined(sun) || defined(__sun)) \
   || (defined __IBMCPP__) \
-  || defined __ANDROID__
+  || defined __ANDROID__ \
+  || defined __QNXNTO__
 
 #define  BOOST_CHRONO_INTERNAL_GMTIME \
      (defined BOOST_WINDOWS && ! defined(__CYGWIN__)) \
