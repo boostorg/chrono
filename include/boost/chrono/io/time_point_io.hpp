@@ -39,13 +39,15 @@
   || (defined(sun) || defined(__sun)) \
   || (defined __IBMCPP__) \
   || defined __ANDROID__ \
-  || defined __QNXNTO__
+  || defined __QNXNTO__ \
+  || (defined(_AIX) && defined __GNUC__)
 
 #define  BOOST_CHRONO_INTERNAL_GMTIME \
      (defined BOOST_WINDOWS && ! defined(__CYGWIN__)) \
   || ( (defined(sun) || defined(__sun)) && defined __GNUC__) \
   || (defined __IBMCPP__) \
-  || defined __ANDROID__
+  || defined __ANDROID__ \
+  || (defined(_AIX) && defined __GNUC__)
 
 #define  BOOST_CHRONO_USES_INTERNAL_TIME_GET
 
