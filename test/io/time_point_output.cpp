@@ -190,7 +190,7 @@ void check_all_system_clock()
 void test_gmtime(std::time_t t)
 {
   std::cout << "t    " << t << std::endl;
-  puts(ctime(&t));
+  std::puts(ctime(&t));
   std::tm tm;
   std::memset(&tm, 0, sizeof(std::tm));
   if (boost::chrono::detail::internal_gmtime(&t, &tm))
