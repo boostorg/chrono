@@ -38,9 +38,9 @@ namespace chrono
         if (BOOST_CHRONO_IS_THROWS(ec))
         {
             boost::throw_exception(
-                    system::system_error( 
-                            errno, 
-                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                    system::system_error(
+                            errno,
+                            BOOST_CHRONO_SYSTEM_CATEGORY,
                             "chrono::system_clock" ));
         }
         else
@@ -50,7 +50,7 @@ namespace chrono
         }
     }
 
-    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    if (!BOOST_CHRONO_IS_THROWS(ec))
     {
         ec.clear();
     }
@@ -73,6 +73,9 @@ namespace chrono
 
   steady_clock::time_point steady_clock::now() BOOST_NOEXCEPT
   {
+#ifdef BOOST_CHRONO_HAS_GETHRTIME
+    return time_point(nanoseconds(gethrtime());
+#else
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
@@ -81,20 +84,25 @@ namespace chrono
 
     return time_point(duration(
       static_cast<steady_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
+#endif
   }
 
 #if !defined BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
   steady_clock::time_point steady_clock::now(system::error_code & ec)
   {
+#ifdef BOOST_CHRONO_HAS_GETHRTIME
+    ec.clear();
+    return time_point(nanoseconds(gethrtime());
+#else
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
         if (BOOST_CHRONO_IS_THROWS(ec))
         {
             boost::throw_exception(
-                    system::system_error( 
-                            errno, 
-                            BOOST_CHRONO_SYSTEM_CATEGORY, 
+                    system::system_error(
+                            errno,
+                            BOOST_CHRONO_SYSTEM_CATEGORY,
                             "chrono::steady_clock" ));
         }
         else
@@ -104,12 +112,13 @@ namespace chrono
         }
     }
 
-    if (!BOOST_CHRONO_IS_THROWS(ec)) 
+    if (!BOOST_CHRONO_IS_THROWS(ec))
     {
         ec.clear();
     }
     return time_point(duration(
       static_cast<steady_clock::rep>( ts.tv_sec ) * 1000000000 + ts.tv_nsec));
+#endif
   }
 #endif
 #endif

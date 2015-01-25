@@ -84,6 +84,13 @@
 #   include <time.h>  //to check for CLOCK_REALTIME and CLOCK_MONOTONIC and _POSIX_THREAD_CPUTIME
 #   if defined(CLOCK_MONOTONIC)
 #      define BOOST_CHRONO_HAS_CLOCK_STEADY
+#     if BOOST_PLATFORM="HP-UX"
+#       include <user_time.h>  //to check for gethrtime
+#       if defined(WHATEVER_HPUX_SPECIFIC_FLAG_ENSURES_GETHRTIME_WILL_BE_DEFINED)
+#         define BOOST_CHRONO_HAS_GETHRTIME
+#         define BOOST_CHRONO_HAS_CLOCK_STEADY
+#       endif
+#     endif
 #   endif
 #   if defined(_POSIX_THREAD_CPUTIME) && !defined(BOOST_DISABLE_THREADS)
 #     define BOOST_CHRONO_HAS_THREAD_CLOCK
