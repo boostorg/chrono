@@ -76,7 +76,7 @@ namespace chrono
 #ifdef BOOST_CHRONO_HAS_GETHRTIME
     hrtime_t hrt = gethrtime();
     BOOST_ASSERT(hrt>=0);
-    return time_point(nanoseconds(hrt);
+    return time_point(nanoseconds(hrt));
 #else
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
@@ -111,7 +111,7 @@ namespace chrono
     {
         ec.clear();
     }
-    return time_point(nanoseconds(hrt);
+    return time_point(nanoseconds(hrt));
 #else
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
