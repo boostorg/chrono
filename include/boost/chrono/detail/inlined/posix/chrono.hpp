@@ -74,7 +74,9 @@ namespace chrono
   steady_clock::time_point steady_clock::now() BOOST_NOEXCEPT
   {
 #ifdef BOOST_CHRONO_HAS_GETHRTIME
-    return time_point(nanoseconds(gethrtime());
+    hrtime_t hrt = gethrtime();
+    BOOST_ASSERT(hrt>=0);
+    return time_point(nanoseconds(hrt);
 #else
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
@@ -91,8 +93,25 @@ namespace chrono
   steady_clock::time_point steady_clock::now(system::error_code & ec)
   {
 #ifdef BOOST_CHRONO_HAS_GETHRTIME
-    ec.clear();
-    return time_point(nanoseconds(gethrtime());
+    hrtime_t hrt = gethrtime();
+    if (hrt<0)
+    {
+        boost::throw_exception(
+                system::system_error(
+                        EFAULT,
+                        BOOST_CHRONO_SYSTEM_CATEGORY,
+                        "chrono::steady_clock" ));
+    }
+    else
+    {
+        ec.assign( EFAULT, BOOST_CHRONO_SYSTEM_CATEGORY );
+        return time_point();
+    }
+    if (!BOOST_CHRONO_IS_THROWS(ec))
+    {
+        ec.clear();
+    }
+    return time_point(nanoseconds(hrt);
 #else
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
@@ -101,7 +120,7 @@ namespace chrono
         {
             boost::throw_exception(
                     system::system_error(
-                            errno,
+                        EFAULT ,
                             BOOST_CHRONO_SYSTEM_CATEGORY,
                             "chrono::steady_clock" ));
         }

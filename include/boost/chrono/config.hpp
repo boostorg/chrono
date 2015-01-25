@@ -86,8 +86,12 @@
 #      define BOOST_CHRONO_HAS_CLOCK_STEADY
 #     if BOOST_PLATFORM="HP-UX"
 #       include <user_time.h>  //to check for gethrtime
-#       if defined(WHATEVER_HPUX_SPECIFIC_FLAG_ENSURES_GETHRTIME_WILL_BE_DEFINED)
-#         define BOOST_CHRONO_HAS_GETHRTIME
+#       if ! defined BOOST_CHRONO_HAS_GETHRTIME
+#         if defined(WHATEVER_HPUX_SPECIFIC_FLAG_ENSURES_GETHRTIME_WILL_BE_DEFINED)
+#           define BOOST_CHRONO_HAS_GETHRTIME
+#           define BOOST_CHRONO_HAS_CLOCK_STEADY
+#         endif
+#       else
 #         define BOOST_CHRONO_HAS_CLOCK_STEADY
 #       endif
 #     endif
