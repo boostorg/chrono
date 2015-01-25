@@ -120,7 +120,7 @@ namespace chrono
         {
             boost::throw_exception(
                     system::system_error(
-                        EFAULT ,
+                            errno,
                             BOOST_CHRONO_SYSTEM_CATEGORY,
                             "chrono::steady_clock" ));
         }
