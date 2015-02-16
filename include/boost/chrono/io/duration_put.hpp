@@ -22,6 +22,17 @@ namespace boost
   namespace chrono
   {
 
+    namespace detail
+    {
+      template <class T>
+      struct propagate {
+        typedef T type;
+      };
+      template <>
+      struct propagate<boost::int_least32_t> {
+        typedef boost::int_least64_t type;
+      };
+    }
     /**
      * @tparam ChatT a character type
      * @tparam OutputIterator a model of @c OutputIterator
@@ -189,7 +200,7 @@ namespace boost
       iter_type put_value(iter_type s, std::ios_base& ios, char_type fill, duration<Rep, Period> const& d) const
       {
         return std::use_facet<std::num_put<CharT, iter_type> >(ios.getloc()).put(s, ios, fill,
-            static_cast<long int> (d.count()));
+            static_cast<typename detail::propagate<Rep>::type> (d.count()));
       }
 
       template <typename Rep, typename Period>
