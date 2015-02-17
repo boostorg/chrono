@@ -18,10 +18,10 @@ int main()
     RationalSeconds d(0.5);
     std::cout << d << std::endl;
   }
-  {
-    typedef boost::chrono::duration<boost::rational<int> > RationalSeconds;
-    RationalSeconds d;
-    std::cout << d << std::endl;
-  }
+//  {
+//    typedef boost::chrono::duration<boost::rational<int> > RationalSeconds;
+//    RationalSeconds d;
+//    std::cout << d << std::endl;
+//  }
   return 0;
 }

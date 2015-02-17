@@ -71,19 +71,19 @@ namespace boost
        * Store a reference to the i/o stream and the value of the associated @c duration_style.
        */
       explicit duration_style_io_saver(state_type &s) :
-        s_save_(s)
+        s_save_(s), a_save_(get_duration_style(s))
       {
-        a_save_ = get_duration_style(s_save_);
       }
 
       /**
        * Construction from an i/o stream and a @c duration_style to restore.
        *
-       * Stores a reference to the i/o stream and the value @c duration_style to restore given as parameter.
+       * Stores a reference to the i/o stream and the value @c new_value @c duration_style to set.
        */
       duration_style_io_saver(state_type &s, aspect_type new_value) :
-        s_save_(s), a_save_(new_value)
+        s_save_(s), a_save_(get_duration_style(s))
       {
+        set_duration_style(s, new_value);
       }
 
       /**
