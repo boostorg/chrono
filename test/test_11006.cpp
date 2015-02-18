@@ -4,16 +4,18 @@
 //  See http://www.boost.org/libs/chrono for documentation.
 
 //#define BOOST_CHRONO_PROVIDES_DEPRECATED_IO_SINCE_V2_0_0
-#include <boost/chrono.hpp>
-#include <boost/chrono/chrono_io.hpp>
-#include <atomic>
+#define BOOST_CHRONO_VERSION 2
+#include <iostream>
+#include <boost/chrono/io/time_point_io.hpp>
 
-void test()
-{
-  std::atomic<boost::chrono::milliseconds> ms; // error C2338: atomic<T> requires T to be trivially copyable.
-}
 
 int main() {
-  test();
-  return 1;
+  {
+    boost::chrono::time_fmt_io_saver<> tmp(std::cout);
+  }
+  {
+    boost::chrono::time_fmt_io_saver<> tmp(std::cout, "%Y-%m-%d %H:%M:%S");
+  }
+  return 0;
 }
+
