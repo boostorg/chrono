@@ -9,7 +9,7 @@
 
 [library Boost.Chrono
     [quickbook 1.5]
-    [version 2.0.4]
+    [version 2.0.5]
     [authors [Hinnant, Howard]]
     [authors [Dawes, Beman]]
     [authors [Botet Escriba, Vicente J.]]
@@ -7364,6 +7364,20 @@ All the units are given using the suffix "s" following the System International 
 [/==================================]
 
 [//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////]
+[section [*Version 2.0.5, February 18, 2015 - 1.58] ]
+
+[*Fixes:]
+
+* [@http://svn.boost.org/trac/boost/ticket/10778 #10778]	VC14 CTP4 Atomic don't compile with boost::chrono durations which are not TriviallyCopyable
+* [@http://svn.boost.org/trac/boost/ticket/10840 #10840] 	Missing std:: qualifier for puts call in test_7868.cpp
+* [@http://svn.boost.org/trac/boost/ticket/10851 #10851] 	Missing std:: qualifier for puts call in time_point_output.cpp
+* [@http://svn.boost.org/trac/boost/ticket/10893 #10893] 	Minor doc typo in Boost.Chrono
+* [@http://svn.boost.org/trac/boost/ticket/10992 #10992] 	Chrono IO state savers inconsistent with Boost.IO state savers
+* [@http://svn.boost.org/trac/boost/ticket/10995 #10995] 	duration_put::put_value truncates fractional part
+* [@http://svn.boost.org/trac/boost/ticket/11006 #11006] 	Impossible to instantiate time_fmt_io_saver due to several errors.
+* [@http://svn.boost.org/trac/boost/ticket/11012 #11012] 	chrono_io v2 fail to compile with boost::chrono::duration< boost::rational<int> >
+
+[endsect] [/section [*Version 2.0.5] ]
 [section [*Version 2.0.4, July 12, 2014 - 1.56] ]
 
 [*Fixes:]
