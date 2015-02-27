@@ -1,7 +1,7 @@
 [/
  / Copyright (c) 2008 Howard Hinnant
  / Copyright (c) 2006, 2008 Beman Dawes
- / Copyright (c) 2009-20010 Vicente J. Botet Escriba
+ / Copyright (c) 2009-2015 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -4334,25 +4334,23 @@ The `state_type` is a version of the IOStreams base class `std::ios_base`.
 
 [section:c1 Constructor `duration_style_io_saver(state_type&)`]
 
-The first constructor takes a stream object and saves a reference to the stream and the current value of a particular stream attribute.
+This constructor takes a stream object and saves a reference to the stream and 
+the current value of a particular stream attribute.
 
           explicit duration_style_io_saver(state_type &s);
 
 __effects Constructs a __duration_style_io_saver by storing `s`.
 
-__postcondition `static_cast<duration_style>(*this) == f`.
-
 [endsect]
 
-[section:c2 Constructor `duration_style_io_saver(state_type, aspect_type)`]
+[section:c2 Constructor `duration_style_io_saver(state_type&, aspect_type)`]
 
-The second constructor works like the first, and uses its second argument to change the stream's attribute to the new aspect_type value given.
+This constructor works like the previous one, and in addition
+uses its second argument to change the stream's attribute to the new `aspect_type` value given.
 
           explicit duration_style_io_saver(state_type &s, aspect_type new_value);
 
-__effects Constructs a __duration_style_io_saver by storing `s`.
-
-__postcondition `static_cast<duration_style>(*this) == f`.
+__effects Constructs a __duration_style_io_saver by storing `s`. Sets the `state_type` `aspect_type` with the value `new_value`.
 
 [endsect]
 
@@ -4397,7 +4395,7 @@ The `state_type` is a version of the IOStreams base class template `std::basic_i
 
 [section:c1 Constructor `timezone_io_saver(state_type&)`]
 
-The first constructor takes a stream object and saves a reference to the stream and the current value of a particular stream attribute.
+This constructor takes a stream object and saves a reference to the stream and the current value of a particular stream attribute.
 
           explicit timezone_io_saver(state_type &s);
 
@@ -4405,13 +4403,14 @@ __effects Constructs a __timezone_io_saver by storing `s`.
 
 [endsect]
 
-[section:c2 Constructor `timezone_io_saver(state_type, aspect_type)`]
+[section:c2 Constructor `timezone_io_saver(state_type&, aspect_type)`]
 
-The second constructor works like the first, and uses its second argument to change the stream's attribute to the new aspect_type value given.
+This constructor works like the previous one, and 
+uses its second argument to change the stream's attribute to the new aspect_type value given.
 
           explicit timezone_io_saver(state_type &s, aspect_type new_value);
 
-__effects Constructs a __timezone_io_saver by storing `s`.
+__effects Constructs a __timezone_io_saver by storing `s`. Sets the `state_type` `aspect_type` with the value `new_value`.
 
 
 [endsect]
@@ -4456,7 +4455,7 @@ The `state_type` is a version of the IOStreams base class template `std::basic_i
 
 [section:c1 Constructor `time_fmt_io_saver(state_type&)`]
 
-The first constructor takes a stream object and saves a reference to the stream and the current value of a particular stream attribute.
+This constructor takes a stream object and saves a reference to the stream and the current value of a particular stream attribute.
 
           explicit time_fmt_io_saver(state_type &s);
 
@@ -4464,13 +4463,14 @@ __effects Constructs a __time_fmt_io_saver by storing `s`.
 
 [endsect]
 
-[section:c2 Constructor `time_fmt_io_saver(state_type, aspect_type)`]
+[section:c2 Constructor `time_fmt_io_saver(state_type&, aspect_type)`]
 
-The second constructor works like the first, and uses its second argument to change the stream's attribute to the new aspect_type value given.
+This constructor works like the previous one, and 
+uses its second argument to change the stream's attribute to the new aspect_type value given.
 
           explicit time_fmt_io_saver(state_type &s, aspect_type new_value);
 
-__effects Constructs a __time_fmt_io_saver by storing `s`.
+__effects Constructs a __time_fmt_io_saver by storing `s`. Sets the `state_type` `aspect_type` with the value `new_value`.
 
 
 [endsect]
