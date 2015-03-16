@@ -434,7 +434,7 @@ rule chrono-compile2 ( sources : name )
     test-suite "io"
         :
         [ chrono-v1-v2-run-header io/duration_input.cpp  ]
-        [ chrono-v1-v2-run-header io/duration_output.cpp  ]
+        [ chrono-v1-v2-run-header io/duration_output.cpp  ]      
         [ chrono-v1-v2-run-header io/time_point_input.cpp  ]
         [ chrono-v1-v2-run-header io/time_point_output.cpp  ]
         [ chrono-run test_7868.cpp  ]

@@ -5,22 +5,23 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/chrono/chrono.hpp>
-#include <boost/chrono/stopwatches/reporters/stopwatch_reporter.hpp>
-#include <boost/chrono/stopwatches/simple_stopwatch.hpp>
+#include <boost/chrono/chrono_io.hpp>
+#include <libs/chrono/example/timer.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <vector>
 
-#if 0
+//#define BOOST_CHRONO_HAS_TIMES_AND_CLOCK
+
+#ifdef BOOST_CHRONO_HAS_TIMES_AND_CLOCK
 #include <sys/time.h> //for gettimeofday and timeval
 #include <sys/times.h> //for times
 #include <unistd.h>
 #endif
 
-//static const std::size_t size = 10000000;
-  static const std::size_t size = 2000000;
 
-typedef boost::chrono::simple_stopwatch<boost::chrono::high_resolution_clock> Stopwatch;
-typedef boost::chrono::stopwatch_reporter<Stopwatch> Reporter;
+static const std::size_t size = 1000000;
+
+typedef boost::chrono::timer<boost::chrono::high_resolution_clock> Stopwatch;
 
 template <typename Clock>
 void perf_constant(std::vector<typename Clock::time_point>& vec)
@@ -50,9 +51,8 @@ void test()
   Stopwatch sw2;
   perf<Clock>(vec);
   Stopwatch::duration t2 = sw2.elapsed();
-  std::cout <<" "<< (t2-t1)/size << std::endl;
-  std::cout <<" "<< t2 << std::endl;
-  std::cout <<" "<< t1 << std::endl;
+  std::cout <<" "<< (t2-t1) << std::endl;
+  //std::cout <<" "<< ((t2-t1)/size) << std::endl;
   std::size_t cnt=0;
   for (int i=size-1; i>0; --i)
   {
@@ -66,24 +66,26 @@ void test()
 
 
 
-#if 0
+#ifdef BOOST_CHRONO_HAS_TIMES_AND_CLOCK
 void perf2(std::vector<clock_t>& vec)
 {
-  Reporter rp;
+  Stopwatch sw;
   for (int i=size-1; i>=0; --i)
   {
     tms tm;
     vec[i]=::times(&tm);
   }
+  std::cout << sw.elapsed() << std::endl;
 }
 
 void perf3(std::vector<clock_t>& vec)
 {
-  Reporter rp;
+  Stopwatch sw;
   for (int i=size-1; i>=0; --i)
   {
     vec[i]=::clock();
   }
+  std::cout << sw.elapsed() << std::endl;
 }
 
 void test2()
