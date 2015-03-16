@@ -129,10 +129,8 @@ namespace boost
      * @return @c os
      */
 
-    template <class CharT, class Traits, class Rep, class Period,
-      typename boost::disable_if_c< duration_put_enabled<Rep>::value, int >::type = 0
-    >
-    std::basic_ostream<CharT, Traits>&
+    template <class CharT, class Traits, class Rep, class Period>
+    typename boost::enable_if_c< ! duration_put_enabled<Rep>::value, std::basic_ostream<CharT, Traits>& >::type
     operator<<(std::basic_ostream<CharT, Traits>& os, const duration<Rep, Period>& d)
     {
       std::basic_ostringstream<CharT, Traits> ostr;
@@ -189,10 +187,8 @@ namespace boost
 
     }
 
-    template <class CharT, class Traits, class Rep, class Period,
-      typename boost::enable_if_c< duration_put_enabled<Rep>::value, int >::type = 0
-    >
-    std::basic_ostream<CharT, Traits>&
+    template <class CharT, class Traits, class Rep, class Period>
+    typename boost::enable_if_c< duration_put_enabled<Rep>::value, std::basic_ostream<CharT, Traits>& >::type
     operator<<(std::basic_ostream<CharT, Traits>& os, const duration<Rep, Period>& d)
     {
       bool failed = false;

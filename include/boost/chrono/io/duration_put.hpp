@@ -213,7 +213,7 @@ namespace boost
       }
 
       template <typename Rep, typename Period>
-      iter_type put_value(iter_type s, std::ios_base& ios, char_type fill, duration<process_times<Rep>, Period> const& d, const char_type* val = 0) const
+      iter_type put_value(iter_type s, std::ios_base& ios, char_type fill, duration<process_times<Rep>, Period> const& d, const char_type* = 0) const
       {
         *s++ = CharT('{');
         s = put_value(s, ios, fill, process_real_cpu_clock::duration(d.count().real));
