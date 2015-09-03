@@ -2895,7 +2895,7 @@ The following members of __duration do not throw an exception unless the indicat
 
             constexpr duration();
 
-__effects  Constructs an object of type __duration from duration_values<rep>::zero().
+__effects  Constructs an object of type __duration initialized from `duration_values<rep>::zero()` in C++98 or `BOOST_CHRONO_DURATION_DEFAULTS_TO_ZERO` is defined, otherwise the duration is uninitialized.
 
 [endsect]
 
@@ -4124,7 +4124,7 @@ This file includes the i/o of the two major components, duration and time_point.
 
         #include <boost/chrono/io/duration_style.hpp>
         #include <boost/chrono/io/timezone.hpp>
-        #include <boost/chrono/io/ios_state.hpp>
+        #include <boost/chrono/io/ios_base_state.hpp>
         #include <boost/chrono/io/duration_get.hpp>
         #include <boost/chrono/io/duration_put.hpp>
         #include <boost/chrono/io/duration_units.hpp>
@@ -4193,7 +4193,7 @@ __duration unit names come in two varieties: prefix and symbol.
 
 
 [/==================================================================]
-[section:ios_state_hpp Header `<boost/chrono/io/ios_state.hpp>`]
+[section:ios_state_hpp Header `<boost/chrono/io/ios_base_state.hpp>`]
 [/==================================================================]
 
     namespace boost {
