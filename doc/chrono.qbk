@@ -2544,7 +2544,7 @@ The current implementation provides in addition:
 
 [section:assert How Assert Behaves?]
 
-When `BOOST_NO_STATIC_ASSERT` is defined, the user can select the way static assertions are reported. Define
+When `BOOST_NO_CXX11_STATIC_ASSERT` is defined, the user can select the way static assertions are reported. Define
 
 * `BOOST_CHRONO_USES_STATIC_ASSERT`: define it if you want to use Boost.StaticAssert.
 * `BOOST_CHRONO_USES_MPL_ASSERT`: define it if you want to use Boost.MPL static assertions.
@@ -5603,7 +5603,7 @@ The symbol or name format can be easily chosen by streaming a `symbol_format` or
 
           explicit __duration_fmt__c1(__duration_style style) noexcept;
 
-        #ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
+        #ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
           explicit
           __duration_fmt__op_duration_style() const noexcept;
         #endif
