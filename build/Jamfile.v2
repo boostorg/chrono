@@ -38,7 +38,8 @@ project boost/chrono
         #<toolset>gcc:<cxxflags>-pedantic
         <toolset>clang:<warnings>on
         <toolset>gcc:<cxxflags>-Wno-long-long
-        <toolset>gcc:<cxxflags>-Wno-variadic-macros
+        <toolset>gcc-4:<cxxflags>-Wno-variadic-macros
+        <toolset>gcc-5:<cxxflags>-Wno-variadic-macros
         <toolset>darwin:<cxxflags>-Wextra
         <toolset>darwin:<cxxflags>-pedantic
         <toolset>darwin:<cxxflags>-Wno-long-long
@@ -49,8 +50,7 @@ project boost/chrono
         <toolset>clang:<cxxflags>-Wextra
         <toolset>clang:<cxxflags>-pedantic
         <toolset>clang:<cxxflags>-Wno-long-long
-        <toolset>gcc-4:<cxxflags>-Wno-variadic-macros
-        <toolset>gcc-5:<cxxflags>-Wno-variadic-macros
+        <toolset>clang:<cxxflags>-Wno-variadic-macros
         <toolset>gcc-4.4.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
  	<toolset>gcc-4.5.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
  	<toolset>gcc-4.6.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
