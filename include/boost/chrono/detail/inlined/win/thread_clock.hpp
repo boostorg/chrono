@@ -16,9 +16,9 @@
 #include <cassert>
 #include <boost/assert.hpp>
 
-#include <boost/detail/winapi/GetLastError.hpp>
-#include <boost/detail/winapi/GetCurrentThread.hpp>
-#include <boost/detail/winapi/GetThreadTimes.hpp>
+#include <boost/detail/winapi/get_last_error.hpp>
+#include <boost/detail/winapi/get_current_thread.hpp>
+#include <boost/detail/winapi/get_thread_times.hpp>
 
 namespace boost
 {
