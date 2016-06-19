@@ -412,7 +412,7 @@ namespace chrono
       {
         static const CharT
             u[] =
-                { 'p', 'r', 'o', 'c', 'e', 's', 's', '_', 's', 'y', 's', 't', 't', 'e', 'm', '_', 'c', 'l', 'o', 'c', 'k' };
+                { 'p', 'r', 'o', 'c', 'e', 's', 's', '_', 's', 'y', 's', 't', 'e', 'm', '_', 'c', 'l', 'o', 'c', 'k' };
         static const std::basic_string<CharT> str(u, u + sizeof(u)
             / sizeof(u[0]));
         return str;
