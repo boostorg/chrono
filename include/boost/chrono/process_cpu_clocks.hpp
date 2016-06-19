@@ -193,7 +193,7 @@ namespace boost { namespace chrono {
                 typedef std::istreambuf_iterator<CharT, Traits> in_iterator;
                 in_iterator i(is);
                 in_iterator e;
-                if (i == e || *i != '{')  // mandatory '{'
+                if (i == e || *i++ != '{')  // mandatory '{'
                 {
                     is.setstate(is.failbit | is.eofbit);
                     return;
