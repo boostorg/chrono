@@ -244,7 +244,8 @@ namespace chrono
         const duration<process_times<Rep2>, Period2>& rhs)
   {
       return boost::chrono::detail::duration_eq<
-          duration<process_times<Rep1>, Period1>, duration<process_times<Rep2>, Period2> >()(lhs, rhs);
+          duration<Rep1, Period1>, duration<Rep2, Period2>
+        >()(duration<Rep1, Period1>(lhs.count().real), duration<Rep2, Period2>(rhs.count().real));
   }
 
   template <class Rep1, class Period1, class Rep2, class Period2>
@@ -285,7 +286,8 @@ namespace chrono
   operator< (const duration<Rep1, Period1>& lhs,
         const duration<process_times<Rep2>, Period2>& rhs)
   {
-    return rhs < lhs;
+      return boost::chrono::detail::duration_lt<
+        duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, duration<Rep2, Period2>(rhs.count().real));
   }
 
   template <class Rep1, class Period1, class Rep2, class Period2>
@@ -295,7 +297,8 @@ namespace chrono
         const duration<process_times<Rep2>, Period2>& rhs)
   {
     return boost::chrono::detail::duration_lt<
-      duration<Rep1, Period1>, duration<Rep2, Period2> >()(lhs, rhs);
+        duration<Rep1, Period1>, duration<Rep2, Period2>
+      >()(duration<Rep1, Period1>(lhs.count().real), duration<Rep2, Period2>(rhs.count().real));
   }
 
 
