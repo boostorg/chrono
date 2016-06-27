@@ -224,8 +224,8 @@ namespace boost
                                                              const std::ctype<char_type>& ct) const
         {
             int t = get_up_to_n_digits(b, e, err, ct, 3);
-            if (!(err & std::ios_base::failbit) && t <= 365)
-                d = t;
+            if (!(err & std::ios_base::failbit) && 1 <= t && t <= 366)
+                d = --t;
             else
                 err |= std::ios_base::failbit;
         }
