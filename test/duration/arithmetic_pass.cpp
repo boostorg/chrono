@@ -23,6 +23,11 @@
 
 int main()
 {
+  // Default construct
+   {
+      BOOST_CONSTEXPR boost::chrono::minutes m;
+      BOOST_CONSTEXPR_ASSERT(m.count() == 0);
+   }
 
   // UNARY PLUS
   {
