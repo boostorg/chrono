@@ -85,6 +85,31 @@ rule chrono-run ( sources )
     ;
 }
 
+rule chrono-runXXX ( sources )
+{
+    return
+    [ run $(sources) ../build//boost_chrono
+        : :
+        :
+            <library>/boost/system//boost_system
+            <define>BOOST_CHRONO_VERSION=2
+        :   $(sources[1]:B)_d  ]
+    #[ run $(sources) ../build//boost_chrono/<link>static
+    #    : :
+    #    :
+    #        <library>/boost/system//boost_system/<link>static
+    #    :   $(sources[1]:B)_s ]
+    [ run $(sources)
+        : :
+        :   <define>BOOST_CHRONO_HEADER_ONLY
+            <define>BOOST_ERROR_CODE_HEADER_ONLY
+           <define>BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING
+            <define>BOOST_CHRONO_VERSION=2
+        :   $(sources[1]:B)_h ]
+    ;
+}
+
+
 rule chrono-v1-v2-run ( sources )
 {
     return
@@ -440,6 +465,7 @@ rule chrono-compile2 ( sources : name )
         [ chrono-run test_7868.cpp  ]
         [ chrono-run test_11006.cpp  ]
         [ chrono-run test_11012.cpp  ]
+        [ chrono-runXXX test_12176.cpp  ]
         ;
 
     test-suite "win32"
