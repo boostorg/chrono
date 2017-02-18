@@ -82,7 +82,7 @@ by
 
 [section:accumulators Stopwatches accumulation and statistics]
 
-The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, 
+The preceding stopwatch manage only with a measure. It is also interesting to have an statistical view of these times, 
 for example the sum, min, max and mean. __laps_stopwatch`<>` associates an accumulator with a __stopwatch__, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
 For example
@@ -219,12 +219,12 @@ You can also use __stopclock_accumulator to get statistical measures of the time
 
 [section:stats How to get specific statistics from stopwatches accumulator?]
 
-There are two use cases that coul need to change the statistics associated to a stopwatches accumulator:
+There are two use cases that could need to change the statistics associated to a stopwatches accumulator:
 
-# We want to reduce the default reporting and we preffer to adapt the statistics to the reporting
+# We want to reduce the default reporting and we prefer to adapt the statistics to the reporting
 # We want to report other statistics of the samples
 
-For the first case we just need to change the accumulator_set and the format we want to get. Imagin we want to get only the count, sam and mean statistics, no need to calculate the min neither the max.
+For the first case we just need to change the accumulator_set and the format we want to get. Imagine we want to get only the count, sam and mean statistics, no need to calculate the min neither the max.
 
     using namespace boost::accumulators;
 
@@ -249,7 +249,7 @@ For the first case we just need to change the accumulator_set and the format we 
       return 0;
     }
 
-But what would hapend if we haven't forced the format:
+But what would hapen if we haven't forced the format:
 
       static my_stopwatch_accumulator_reporter acc;
       my_stopwatch_accumulator_reporter::scoped_run _(acc);

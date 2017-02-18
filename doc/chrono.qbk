@@ -7243,7 +7243,8 @@ accuracy of timing information provided the __Clock, and this could varies a gre
 [section:process_times_hpp Deprecated Header `<boost/chrono/process_times.hpp>`]
 [/==================================================================]
 
-This header has been deprecated. Use instead `<boost/chrono/process_cpu_clocks.hpp>`, `<boost/chrono/stopwatch.hpp>`, `<boost/chrono/stopwatch_reporter.hpp>` and `<boost/chrono/stopclock.hpp>` files.
+#, `<boost/chrono/stopwatch.hpp>`, `<boost/chrono/stopwatch_reporter.hpp>` and `<boost/chrono/stopclock.hpp>`
+This header has been deprecated. Use instead `<boost/chrono/process_cpu_clocks.hpp>` files.
 
     namespace boost { namespace chrono {
 
