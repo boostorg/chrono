@@ -433,12 +433,13 @@ namespace chrono {
         rep rep_;
     public:
 
-#if  defined   BOOST_NO_CXX11_DEFAULTED_FUNCTIONS || \
-     defined   BOOST_CHRONO_DURATION_DEFAULTS_TO_ZERO
+#if  defined   BOOST_CHRONO_DURATION_DEFAULTS_TO_ZERO
         BOOST_FORCEINLINE BOOST_CONSTEXPR
         duration() : rep_(duration_values<rep>::zero()) { }
+#elif  defined   BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+        BOOST_CONSTEXPR duration() {}
 #else
-        BOOST_CONSTEXPR duration() BOOST_NOEXCEPT : rep_() {}
+        BOOST_CONSTEXPR duration()  = default;
 #endif
         template <class Rep2>
         BOOST_SYMBOL_VISIBLE BOOST_FORCEINLINE BOOST_CONSTEXPR
