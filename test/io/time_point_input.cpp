@@ -31,7 +31,7 @@ template <typename Clock, typename D>
 void test_good(std::string str, D res)
 {
   typedef boost::chrono::time_point<Clock, D> clock_time_point;
-  typedef typename Clock::duration clock_duration;
+  //typedef typename Clock::duration clock_duration;
   std::istringstream in(str + boost::chrono::clock_string<Clock, char>::since());
   clock_time_point tp;
   in >> tp;
