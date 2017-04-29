@@ -20,7 +20,7 @@
 #include <boost/chrono/time_point.hpp>
 #include <boost/operators.hpp>
 #include <boost/chrono/detail/system.hpp>
-#include <iostream>
+#include <iosfwd>
 #include <boost/type_traits/common_type.hpp>
 #include <boost/chrono/clock_string.hpp>
 
