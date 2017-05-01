@@ -476,7 +476,7 @@ namespace std {
                       (std::numeric_limits<Rep>::max)(),
                       (std::numeric_limits<Rep>::max)());
         }
-        static Res lowest() throw()
+        static Res lowest() BOOST_NOEXCEPT_OR_NOTHROW
         {
             return (min)();
         }
