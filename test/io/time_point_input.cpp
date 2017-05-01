@@ -158,7 +158,7 @@ void check_all_process_cpu_clock()
 {
   using namespace boost::chrono;
   using namespace boost;
-  typedef process_cpu_clock Clock;
+  //typedef process_cpu_clock Clock;
   //test_good<Clock> ("{5000;0;0} nanoseconds", process_cpu_clock::duration(process_cpu_clock::times(5000,0,0)));
 }
 #endif
