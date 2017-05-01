@@ -28,6 +28,7 @@ int main()
       //BOOST_CONSTEXPR
       boost::chrono::minutes m;
       //BOOST_CONSTEXPR_ASSERT(m.count() == 0);
+      (void)m;
    }
 
   // UNARY PLUS
