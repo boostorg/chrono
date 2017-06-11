@@ -25,7 +25,7 @@ namespace boost
 
 
     /**
-     * A laps_stopwatch is a model of @c Stopwatch taking as parameters the @c Clock and the @c LapsCollector.
+     * A laps_stopwatch is a model of @c Stopwatch taking as template parameters the @c Clock and the @c LapsCollector.
      *
      * The main difference respect to a @c simple_stopwatch is that the user can stop it.
      * Each sequence of start-stop results in a new elapsed duration sample that is provided to the LapsCollector.
