@@ -8,6 +8,7 @@
 
 # See library home page at http://www.boost.org/libs/chrono
 
+import testing ;
 import os ;
 import feature ;
 

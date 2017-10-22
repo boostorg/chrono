@@ -2569,7 +2569,7 @@ Depending on the static assertion used system you will have an hint of the faili
 
 [section:no_hybrid Don't provide Hybrid Error Handling]
 
-When `BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING` is defined the lib don't provides the hybrid error handling prototypes:
+When `BOOST_CHRONO_DONT_PROVIDE_HYBRID_ERROR_HANDLING` is defined the lib doesn't provides the hybrid error handling prototypes:
 
   Clock::time_point Clock::now(system::error_code&ec=boost::throws());
 
