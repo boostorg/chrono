@@ -205,7 +205,7 @@ namespace boost
           )
       {
         time_point tmp = clock::now(ec);
-        if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+        if (!::boost::chrono::is_throws(ec) && ec) return;
 
         if (is_running())
         {
@@ -246,7 +246,7 @@ namespace boost
           )
       {
           time_point tmp = clock::now(ec);
-          if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+          if (!::boost::chrono::is_throws(ec) && ec) return;
 
           start_ = tmp;
           running_ = true;
@@ -292,7 +292,7 @@ namespace boost
         if (is_running())
         {
           time_point tmp = clock::now(ec);
-          if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+          if (!::boost::chrono::is_throws(ec) && ec) return;
 
           laps_collector_.store(tmp - start_);
           start_ = time_point(duration::zero());
@@ -342,7 +342,7 @@ namespace boost
         if (is_running())
         {
             time_point tmp = clock::now(ec);
-            if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return duration::zero();
+            if (!::boost::chrono::is_throws(ec) && ec) return duration::zero();
 
             return tmp - start_;
         } else
@@ -379,7 +379,7 @@ namespace boost
           ) const
       {
         duration tmp = elapsed_current_lap(ec);
-        if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return duration::zero();
+        if (!::boost::chrono::is_throws(ec) && ec) return duration::zero();
         return laps_collector_.elapsed() + tmp;
       }
 #endif

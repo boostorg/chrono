@@ -72,21 +72,21 @@ namespace chrono_detail
             ((nanosecs_per_tic <= 0.0L)
                     ? ERROR_NOT_SUPPORTED
                     : boost::detail::winapi::GetLastError());
-        if (BOOST_CHRONO_IS_THROWS(ec)) {
+        if (::boost::chrono::is_throws(ec)) {
             boost::throw_exception(
                     system::system_error(
                             cause,
-                            BOOST_CHRONO_SYSTEM_CATEGORY,
+                            ::boost::system::system_category(),
                             "chrono::steady_clock" ));
         }
         else
         {
-            ec.assign( cause, BOOST_CHRONO_SYSTEM_CATEGORY );
+            ec.assign( cause, ::boost::system::system_category() );
             return steady_clock::time_point(duration(0));
         }
     }
 
-    if (!BOOST_CHRONO_IS_THROWS(ec))
+    if (!::boost::chrono::is_throws(ec))
     {
         ec.clear();
     }
@@ -115,7 +115,7 @@ namespace chrono_detail
   {
     boost::detail::winapi::FILETIME_ ft;
     boost::detail::winapi::GetSystemTimeAsFileTime( &ft );  // never fails
-    if (!BOOST_CHRONO_IS_THROWS(ec))
+    if (!::boost::chrono::is_throws(ec))
     {
         ec.clear();
     }

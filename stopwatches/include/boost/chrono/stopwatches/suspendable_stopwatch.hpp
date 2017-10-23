@@ -132,7 +132,7 @@ namespace boost
       void restart(system::error_code & ec)
       {
         time_point tmp = clock::now(ec);
-        if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+        if (!::boost::chrono::is_throws(ec) && ec) return;
 
         if (running_)
         {
@@ -158,7 +158,7 @@ namespace boost
       void start(system::error_code & ec)
       {
           time_point tmp = clock::now(ec);
-          if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+          if (!::boost::chrono::is_throws(ec) && ec) return;
 
           partial_ = duration::zero();
           start_ = tmp;
@@ -179,7 +179,7 @@ namespace boost
       void stop(system::error_code & ec)
       {
           time_point tmp = clock::now(ec);
-          if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+          if (!::boost::chrono::is_throws(ec) && ec) return;
 
           partial_ += tmp - start_;
           laps_collector_.store(partial_);
@@ -209,7 +209,7 @@ namespace boost
           if (!suspended_)
           {
             time_point tmp = clock::now(ec);
-            if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+            if (!::boost::chrono::is_throws(ec) && ec) return;
 
             partial_ += tmp - start_;
             suspended_ = true;
@@ -240,7 +240,7 @@ namespace boost
         if (suspended_)
         {
           time_point tmp = clock::now(ec);
-          if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return;
+          if (!::boost::chrono::is_throws(ec) && ec) return;
 
           start_ = tmp;
           suspended_ = false;
@@ -285,7 +285,7 @@ namespace boost
           else
           {
             time_point tmp = clock::now(ec);
-            if (!BOOST_CHRONO_IS_THROWS(ec) && ec) return duration::zero();
+            if (!::boost::chrono::is_throws(ec) && ec) return duration::zero();
 
             return partial_ + tmp - start_;
           }

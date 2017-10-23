@@ -78,7 +78,7 @@ namespace boost
 
       template<class Stopwatch>
       void operator()(Stopwatch & stopwatch_
-          //, system::error_code & ec = BOOST_CHRONO_THROWS
+          //, system::error_code & ec = ::boost::throws()
           )
       {
 

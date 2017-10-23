@@ -45,7 +45,7 @@ namespace boost
         start_(duration::zero())
       {
         time_point tmp = clock::now(ec);
-        if (!BOOST_CHRONO_IS_THROWS(ec))
+        if (!::boost::chrono::is_throws(ec))
         {
           if (ec)
           {
@@ -69,7 +69,7 @@ namespace boost
       duration elapsed(system::error_code & ec)
       {
         time_point tmp = clock::now(ec);
-        if (!BOOST_CHRONO_IS_THROWS(ec))
+        if (!::boost::chrono::is_throws(ec))
         {
           if (ec)
             return duration::zero();
