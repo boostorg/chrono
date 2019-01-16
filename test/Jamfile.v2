@@ -42,7 +42,7 @@ project
         <toolset>clang:<cxxflags>-Wno-long-long
         <toolset>clang:<cxxflags>-Wno-variadic-macros
         <toolset>gcc-4.5.0,<target-os>windows:<cxxflags>-Wno-missing-field-initializers 
- 	<toolset>gcc-4.5.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
+        <toolset>gcc-4.5.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
         <toolset>msvc:<cxxflags>/wd4127
         <toolset>msvc:<cxxflags>/wd4512
 # Note: Some of the remarks from the Intel compiler are disabled
@@ -58,7 +58,7 @@ project
         <toolset>intel:<cxxflags>-wd193,304,383,444
         <toolset>intel:<cxxflags>-wd593,981
         <toolset>intel:<cxxflags>-wd1418
-	  <toolset>intel:<cxxflags>-wd2415
+        <toolset>intel:<cxxflags>-wd2415
     ;
 
 rule chrono-run ( sources )
@@ -67,13 +67,11 @@ rule chrono-run ( sources )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_d  ]
     #[ run $(sources) ../build//boost_chrono/<link>static
     #    : :
     #    :
-    #        <library>/boost/system//boost_system/<link>static
     #    :   $(sources[1]:B)_s ]
     [ run $(sources)
         : :
@@ -91,13 +89,11 @@ rule chrono-runXXX ( sources )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_d  ]
     #[ run $(sources) ../build//boost_chrono/<link>static
     #    : :
     #    :
-    #        <library>/boost/system//boost_system/<link>static
     #    :   $(sources[1]:B)_s ]
     [ run $(sources)
         : :
@@ -116,13 +112,11 @@ rule chrono-v1-v2-run ( sources )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_d  ]
     [ run $(sources) ../build//boost_chrono/<link>static
         : :
         :
-            <library>/boost/system//boost_system/<link>static
         :   v1_$(sources[1]:B)_s ]
     [ run $(sources)
         : :
@@ -147,13 +141,11 @@ rule chrono-run2 ( sources : name )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(name)_d  ]
     #[ run $(sources) ../build//boost_chrono/<link>static
     #    : :
     #    :
-    #        <library>/boost/system//boost_system/<link>static
     #    : $(name)_s ]
     [ run $(sources)
         : :
@@ -171,7 +163,6 @@ rule date-run ( sources + )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_d  ]
     ;
@@ -183,7 +174,6 @@ rule date-run-2 ( sources + : name )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(name)_d  ]
     ;
@@ -196,13 +186,11 @@ rule chrono-run-mt ( sources )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_d  ]
     #[ run $(sources) ../build//boost_chrono/<link>static
     #    : :
     #    :
-    #        <library>/boost/system//boost_system/<link>static
     #    :  $(sources[1]:B)_s ]
     [ run $(sources)
         : :
@@ -219,13 +207,11 @@ rule chrono-run2-mt ( sources * : name )
     [ run $(sources) ../build//boost_chrono
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(name)_d  ]
     #[ run $(sources) ../build//boost_chrono/<link>static
     #    : :
     #    :
-    #        <library>/boost/system//boost_system/<link>static
     #    : $(name)_s ]
     [ run $(sources)
         : :
@@ -243,13 +229,11 @@ rule chrono-run-check ( sources )
     [ run $(sources)
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_d  ]
     [ run $(sources)
         : :
         :
-            <library>/boost/system//boost_system/<link>static
             <define>BOOST_CHRONO_VERSION=2
         :   $(sources[1]:B)_s ]
     [ run $(sources)
@@ -268,13 +252,11 @@ rule chrono-run-check2 ( sources : name )
     [ run $(sources)
         : :
         :
-            <library>/boost/system//boost_system
             <define>BOOST_CHRONO_VERSION=2
         :   $(name)_d  ]
     [ run $(sources)
         : :
         :
-            <library>/boost/system//boost_system/<link>static
             <define>BOOST_CHRONO_VERSION=2
         : $(name)_s ]
     [ run $(sources)
@@ -458,7 +440,7 @@ rule chrono-compile2 ( sources : name )
     test-suite "io"
         :
         [ chrono-v1-v2-run-header io/duration_input.cpp  ]
-        [ chrono-v1-v2-run-header io/duration_output.cpp  ]      
+        [ chrono-v1-v2-run-header io/duration_output.cpp  ]
         [ chrono-v1-v2-run-header io/time_point_input.cpp  ]
         [ chrono-v1-v2-run-header io/time_point_output.cpp  ]
         [ chrono-run test_7868.cpp  ]

@@ -15,9 +15,7 @@ project boost/chrono
         <target-os>linux:<linkflags>"-lrt -lpthread"
         <toolset>pgi:<linkflags>"-lrt"
         #<threading>single:<define>BOOST_CHRONO_THREAD_DISABLED
-        <library>/boost/system//boost_system
         #<define>BOOST_ERROR_CODE_HEADER_ONLY
-        #<define>BOOST_SYSTEM_INLINED
         #<define>BOOST_COMMON_TYPE_USES_STATIC_ASSERT
         #<define>BOOST_RATIO_USES_STATIC_ASSERT
         #<define>BOOST_CHRONO_USES_STATIC_ASSERT
@@ -54,11 +52,11 @@ project boost/chrono
         <toolset>clang:<cxxflags>-Wno-long-long
         <toolset>clang:<cxxflags>-Wno-variadic-macros
         <toolset>gcc-4.4.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
- 	<toolset>gcc-4.5.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
- 	<toolset>gcc-4.6.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
- 	<toolset>gcc-4.6.3,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
- 	<toolset>gcc-4.7.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
- 	<toolset>gcc-4.8.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
+        <toolset>gcc-4.5.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
+        <toolset>gcc-4.6.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
+        <toolset>gcc-4.6.3,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
+        <toolset>gcc-4.7.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
+        <toolset>gcc-4.8.0,<target-os>windows:<cxxflags>-fdiagnostics-show-option 
         <toolset>msvc:<cxxflags>/wd4512
 
 # Note: Some of the remarks from the Intel compiler are disabled
@@ -74,15 +72,13 @@ project boost/chrono
         <toolset>intel:<cxxflags>-wd193,304,383,444
         <toolset>intel:<cxxflags>-wd593,981
         <toolset>intel:<cxxflags>-wd1418
-	  <toolset>intel:<cxxflags>-wd2415
+        <toolset>intel:<cxxflags>-wd2415
 
 
 
     : usage-requirements  # pass these requirement to dependents (i.e. users)
         <threading>single:<define>BOOST_CHRONO_THREAD_DISABLED
-        <library>/boost/system//boost_system
         #<define>BOOST_ERROR_CODE_HEADER_ONLY
-        #<define>BOOST_SYSTEM_INLINED
         #<define>BOOST_COMMON_TYPE_USES_STATIC_ASSERT
         #<define>BOOST_RATIO_USES_STATIC_ASSERT
         #<define>BOOST_CHRONO_USES_STATIC_ASSERT
@@ -101,7 +97,7 @@ project boost/chrono
         <toolset>gcc-3.4.4:<linkflags>--enable-auto-import
         <toolset>gcc-4.3.4:<linkflags>--enable-auto-import
         <toolset>gcc-4.4.0,<target-os>windows:<linkflags>--enable-auto-import 
- 	<toolset>gcc-4.5.0,<target-os>windows:<linkflags>--enable-auto-import 
+        <toolset>gcc-4.5.0,<target-os>windows:<linkflags>--enable-auto-import 
     ;
 
 SOURCES = chrono thread_clock process_cpu_clocks ;
