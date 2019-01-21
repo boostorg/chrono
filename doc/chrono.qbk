@@ -109,7 +109,6 @@
 [template chrono_conf[link_text] [link chrono.reference.cpp0x.chrono_chrono_hpp.conf [link_text]]]
 
 [def __BOOST_CHRONO_HEADER_ONLY [link chrono.reference.cpp0x.chrono_chrono_hpp.conf.header_only `BOOST_CHRONO_HEADER_ONLY`]]
-[def __BOOST_SYSTEM_INLINED `BOOST_SYSTEM_INLINED`]
 
 [def __BOOST_CHRONO_USES_STATIC_ASSERT [chrono_conf `BOOST_CHRONO_USES_STATIC_ASSERT`]]
 [def __BOOST_CHRONO_USES_MPL_ASSERT [chrono_conf `BOOST_CHRONO_USES_MPL_ASSERT`]]
