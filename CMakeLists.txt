@@ -16,6 +16,16 @@ add_library( boost_chrono
 add_library( Boost::chrono ALIAS boost_chrono )
 
 target_include_directories( boost_chrono PUBLIC include )
+target_compile_definitions( boost_chrono
+    INTERFACE
+        # NOTE:
+        # We deactivate autolinking because cmake based builds don't need it
+        # and we don't implement name mangling for the library file anyway.
+        # Ususally the parent CMakeLists.txt file should already have globally defined BOOST_ALL_NO_LIB
+        BOOST_CHRONO_NO_LIB
+        $<$<STREQUAL:$<TARGET_PROPERTY:boost_chrono,TYPE>,SHARED_LIBRARY>:BOOST_CHRONO_DYN_LINK=1>
+        $<$<STREQUAL:$<TARGET_PROPERTY:boost_chrono,TYPE>,STATIC_LIBRARY>:BOOST_CHRONO_STATIC_LINK=1>
+)
 
 target_link_libraries( boost_chrono
     PUBLIC
