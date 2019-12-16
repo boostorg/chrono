@@ -17,7 +17,7 @@ add_library( Boost::chrono ALIAS boost_chrono )
 
 target_include_directories( boost_chrono PUBLIC include )
 target_compile_definitions( boost_chrono
-    INTERFACE
+    PUBLIC
         # NOTE:
         # We deactivate autolinking because cmake based builds don't need it
         # and we don't implement name mangling for the library file anyway.
