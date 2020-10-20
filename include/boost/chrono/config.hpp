@@ -170,6 +170,12 @@
 #define BOOST_CHRONO_INLINE
 #define BOOST_CHRONO_STATIC static
 
+#ifdef BOOST_NO_CXX11_NULLPTR
+#   define BOOST_CHRONO_NULL NULL
+#else
+#   define BOOST_CHRONO_NULL nullptr
+#endif
+
 //  enable dynamic linking on Windows  ---------------------------------------//
 
 // we need to import/export our code only if the user has specifically
