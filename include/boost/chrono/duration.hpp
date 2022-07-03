@@ -463,9 +463,12 @@ namespace chrono {
             if (&rhs != this) rep_= rhs.rep_;
             return *this;
         }
+        duration(const duration& rhs) : rep_(rhs.rep_) {}
 #else
         duration& operator=(const duration& rhs) = default;
+        duration(const duration&) = default;
 #endif
+
         // conversions
         template <class Rep2, class Period2>
         BOOST_FORCEINLINE BOOST_CONSTEXPR
