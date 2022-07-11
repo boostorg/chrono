@@ -213,12 +213,5 @@
 #endif  // auto-linking disabled
 #endif // BOOST_CHRONO_HEADER_ONLY
 
-// Enable nullptr instead of 0 when available
-#ifdef BOOST_NO_CXX11_NULLPTR
-#  define BOOST_CHRONO_NULLPTR 0
-#else
-#  define BOOST_CHRONO_NULLPTR nullptr
-#endif // BOOST_NO_CXX11_NULLPTR
-
 #endif // BOOST_CHRONO_CONFIG_HPP
 
