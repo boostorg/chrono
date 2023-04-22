@@ -24,7 +24,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/integer/common_factor_rt.hpp>
 #include <boost/chrono/detail/scan_keyword.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/core/enable_if.hpp>
 #include <boost/chrono/detail/no_warning/signed_unsigned_cmp.hpp>
 
 namespace boost
