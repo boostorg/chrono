@@ -6857,7 +6857,7 @@ __process_system_cpu_clock class provides access to the system CPU-time steady c
 
 `process_cpu_clock` provides a thin wrapper around the operating system's process time API. For POSIX-like systems, that's the times() function, while for Windows, it's the `GetProcessTimes()` function.
 
-The process relative real, user and system current time can be obtained at once by calling `process_clocks::now()`.
+The process relative real, user and system current time can be obtained at once by calling `process_cpu_clock::now()`.
 
     class process_cpu_clock
     {
