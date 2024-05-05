@@ -8,6 +8,7 @@
 
 # See library home page at http://www.boost.org/libs/chrono
 
+import-search /boost/config/checks ;
 import config : requires ;
 
 local cxx11-requirements = [ requires cxx11_hdr_ratio cxx11_template_aliases cxx11_decltype cxx11_char16_t cxx11_char32_t ] ;
