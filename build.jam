@@ -5,23 +5,25 @@
 
 require-b2 5.2 ;
 
+constant boost_dependencies :
+    /boost/assert//boost_assert
+    /boost/config//boost_config
+    /boost/core//boost_core
+    /boost/integer//boost_integer
+    /boost/move//boost_move
+    /boost/mpl//boost_mpl
+    /boost/predef//boost_predef
+    /boost/ratio//boost_ratio
+    /boost/static_assert//boost_static_assert
+    /boost/system//boost_system
+    /boost/throw_exception//boost_throw_exception
+    /boost/type_traits//boost_type_traits
+    /boost/typeof//boost_typeof
+    /boost/utility//boost_utility
+    /boost/winapi//boost_winapi ;
+
 project /boost/chrono
     : common-requirements
-        <library>/boost/assert//boost_assert
-        <library>/boost/config//boost_config
-        <library>/boost/core//boost_core
-        <library>/boost/integer//boost_integer
-        <library>/boost/move//boost_move
-        <library>/boost/mpl//boost_mpl
-        <library>/boost/predef//boost_predef
-        <library>/boost/ratio//boost_ratio
-        <library>/boost/static_assert//boost_static_assert
-        <library>/boost/system//boost_system
-        <library>/boost/throw_exception//boost_throw_exception
-        <library>/boost/type_traits//boost_type_traits
-        <library>/boost/typeof//boost_typeof
-        <library>/boost/utility//boost_utility
-        <library>/boost/winapi//boost_winapi
         <include>include
     ;
 
@@ -33,3 +35,4 @@ explicit
 call-if : boost-library chrono
     : install boost_chrono
     ;
+

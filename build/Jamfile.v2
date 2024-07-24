@@ -15,6 +15,7 @@ local cxx11-requirements = [ requires cxx11_hdr_ratio cxx11_template_aliases cxx
 
 project
     : source-location ../src
+    : common-requirements <library>$(boost_dependencies)
     : requirements
         <target-os>freebsd:<linkflags>"-lrt"
         <target-os>linux:<linkflags>"-lrt -lpthread"
