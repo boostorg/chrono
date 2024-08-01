@@ -60,6 +60,7 @@ project
         <toolset>intel:<cxxflags>-wd1418
         <toolset>intel:<cxxflags>-wd2415
         <library>/boost/rational//boost_rational
+        <library>$(boost_dependencies)
     ;
 
 rule chrono-run ( sources )
