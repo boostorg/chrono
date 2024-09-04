@@ -60,7 +60,7 @@ project
         <toolset>intel:<cxxflags>-wd1418
         <toolset>intel:<cxxflags>-wd2415
         <library>/boost/rational//boost_rational
-        <library>$(boost_dependencies)
+        <use>/boost/chrono//boost_chrono
     ;
 
 rule chrono-run ( sources )
@@ -118,7 +118,7 @@ rule chrono-v1-v2-run ( sources )
         :   $(sources[1]:B)_d  ]
     [ run $(sources) ../build//boost_chrono/<link>static
         : :
-        :
+        : -<use>/boost/chrono//boost_chrono
         :   v1_$(sources[1]:B)_s ]
     [ run $(sources)
         : :
@@ -464,4 +464,3 @@ rule chrono-compile2 ( sources : name )
         #[ chrono-run test_10778.cpp  ]
         [ chrono-run test_10631.cpp  ]
         ;
-
