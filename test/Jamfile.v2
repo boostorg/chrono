@@ -464,3 +464,8 @@ rule chrono-compile2 ( sources : name )
         #[ chrono-run test_10778.cpp  ]
         [ chrono-run test_10631.cpp  ]
         ;
+
+# 'quick` target for CI
+
+run quick.cpp
+  : : : -<use>/boost/chrono//boost_chrono <library>/boost/chrono//boost_chrono ;
