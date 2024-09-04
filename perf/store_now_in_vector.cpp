@@ -6,7 +6,7 @@
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/chrono_io.hpp>
-#include <libs/chrono/example/timer.hpp>
+#include <timer.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <vector>
 
