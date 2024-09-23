@@ -311,13 +311,13 @@ namespace boost
           rt = rt_ratio(exa());
           break;
         case 16:
-          rt = rt_ratio(ratio<1> ());
+          rt = rt_ratio(boost::ratio<1> ());
           break;
         case 17:
-          rt = rt_ratio(ratio<60> ());
+          rt = rt_ratio(boost::ratio<60> ());
           break;
         case 18:
-          rt = rt_ratio(ratio<3600> ());
+          rt = rt_ratio(boost::ratio<3600> ());
           break;
         default:
           return false;
@@ -417,7 +417,7 @@ namespace boost
        */
       string_type do_get_n_d_unit(duration_style style, rt_ratio, intmax_t v) const
       {
-        return do_get_unit(style, ratio<1>(), do_get_plural_form(v));
+        return do_get_unit(style, boost::ratio<1>(), do_get_plural_form(v));
       }
 
       /**
@@ -429,7 +429,7 @@ namespace boost
           switch (rt.den)
           {
           case BOOST_RATIO_INTMAX_C(1):
-            return do_get_unit(style, ratio<1>(), do_get_plural_form(v));
+            return do_get_unit(style, boost::ratio<1>(), do_get_plural_form(v));
           case BOOST_RATIO_INTMAX_C(10):
             return do_get_unit(style, deci(), do_get_plural_form(v));
           case BOOST_RATIO_INTMAX_C(100):
@@ -455,13 +455,13 @@ namespace boost
           case BOOST_RATIO_INTMAX_C(10):
              return do_get_unit(style, deca(), do_get_plural_form(v));
           case BOOST_RATIO_INTMAX_C(60):
-            return do_get_unit(style, ratio<60>(), do_get_plural_form(v));
+            return do_get_unit(style, boost::ratio<60>(), do_get_plural_form(v));
           case BOOST_RATIO_INTMAX_C(100):
              return do_get_unit(style, hecto(), do_get_plural_form(v));
            case BOOST_RATIO_INTMAX_C(1000):
              return do_get_unit(style, kilo(), do_get_plural_form(v));
            case BOOST_RATIO_INTMAX_C(3600):
-             return do_get_unit(style, ratio<3600>(), do_get_plural_form(v));
+             return do_get_unit(style, boost::ratio<3600>(), do_get_plural_form(v));
            case BOOST_RATIO_INTMAX_C(1000000):
              return do_get_unit(style, mega(), do_get_plural_form(v));
            case BOOST_RATIO_INTMAX_C(1000000000):
@@ -515,11 +515,11 @@ namespace boost
        * @param pf the requested plural form.
        * @return if style is symbol returns "s", otherwise if pf is 0 return "second", if pf is 1 "seconds"
        */
-      virtual string_type do_get_unit(duration_style style, ratio<1> u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style style, boost::ratio<1> u, std::size_t pf) const
       {
         return static_get_unit(style,u,pf);
       }
-      static string_type static_get_unit(duration_style style, ratio<1> , std::size_t pf)
+      static string_type static_get_unit(duration_style style, boost::ratio<1> , std::size_t pf)
       {
         static const CharT t[] =
         { 's' };
@@ -554,11 +554,11 @@ namespace boost
        * @param pf the requested plural form.
        * @return if style is symbol returns "min", otherwise if pf is 0 return "minute", if pf is 1 "minutes"
        */
-      virtual string_type do_get_unit(duration_style style, ratio<60> u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style style, boost::ratio<60> u, std::size_t pf) const
       {
         return static_get_unit(style,u,pf);
       }
-      static string_type static_get_unit(duration_style style, ratio<60> , std::size_t pf)
+      static string_type static_get_unit(duration_style style, boost::ratio<60> , std::size_t pf)
       {
         static const CharT t[] =
         { 'm', 'i', 'n' };
@@ -586,11 +586,11 @@ namespace boost
        * @param pf the requested plural form.
        * @return if style is symbol returns "h", otherwise if pf is 0 return "hour", if pf is 1 "hours"
        */
-      virtual string_type do_get_unit(duration_style style, ratio<3600> u, std::size_t pf) const
+      virtual string_type do_get_unit(duration_style style, boost::ratio<3600> u, std::size_t pf) const
       {
         return static_get_unit(style,u,pf);
       }
-      static string_type static_get_unit(duration_style style, ratio<3600> , std::size_t pf)
+      static string_type static_get_unit(duration_style style, boost::ratio<3600> , std::size_t pf)
       {
         static const CharT t[] =
         { 'h' };
@@ -618,11 +618,11 @@ namespace boost
        */
       virtual string_type do_get_unit(duration_style style, atto u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, atto u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       /**
        * @param style the duration style.
@@ -632,11 +632,11 @@ namespace boost
        */
       virtual string_type do_get_unit(duration_style style, femto u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, femto u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       /**
        * @param style the duration style.
@@ -646,115 +646,115 @@ namespace boost
        */
       virtual string_type do_get_unit(duration_style style, pico u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, pico u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, nano u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, nano u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, micro u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, micro u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, milli u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, milli u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, centi u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, centi u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, deci u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, deci u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, deca u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, deca u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, hecto u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, hecto u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, kilo u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, kilo u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, mega u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, mega u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, giga u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, giga u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, tera u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, tera u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, peta u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, peta u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
       virtual string_type do_get_unit(duration_style style, exa u, std::size_t pf) const
       {
-        return do_get_ratio_prefix(style, u) + do_get_unit(style, ratio<1> (), pf);
+        return do_get_ratio_prefix(style, u) + do_get_unit(style, boost::ratio<1> (), pf);
       }
       static string_type static_get_unit(duration_style style, exa u, std::size_t pf)
       {
-        return static_get_ratio_prefix(style, u) + static_get_unit(style, ratio<1> (), pf);
+        return static_get_ratio_prefix(style, u) + static_get_unit(style, boost::ratio<1> (), pf);
       }
 
     protected:
@@ -951,9 +951,9 @@ namespace boost
         it = static_fill_units(it, tera());
         it = static_fill_units(it, peta());
         it = static_fill_units(it, exa());
-        it = static_fill_units(it, ratio<1> ());
-        it = static_fill_units(it, ratio<60> ());
-        it = static_fill_units(it, ratio<3600> ());
+        it = static_fill_units(it, boost::ratio<1> ());
+        it = static_fill_units(it, boost::ratio<60> ());
+        it = static_fill_units(it, boost::ratio<3600> ());
         return it;
       }
     };
@@ -973,7 +973,7 @@ namespace boost
                 duration_units_default_holder<CharT>::valid_units_ = new string_type[19 * 3];
 
                 string_type* it = duration_units_default_holder<CharT>::n_d_valid_units_;
-                it = duration_units_default<CharT>::static_fill_units(it, ratio<1> ());
+                it = duration_units_default<CharT>::static_fill_units(it, boost::ratio<1> ());
                 it = duration_units_default<CharT>::static_init_valid_units(duration_units_default_holder<CharT>::valid_units_);
 
                 duration_units_default_holder<CharT>::initialized_ = true;

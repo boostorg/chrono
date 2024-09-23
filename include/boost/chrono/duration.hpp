@@ -74,7 +74,7 @@ time2_demo contained this comment:
 namespace boost {
 namespace chrono {
 
-    template <class Rep, class Period = ratio<1> >
+    template <class Rep, class Period = boost::ratio<1> >
     class duration;
 
     namespace detail
@@ -196,12 +196,12 @@ namespace chrono {
     template <class Rep> struct duration_values;
 
     // convenience typedefs
-    typedef duration<boost::int_least64_t, nano> nanoseconds;    // at least 64 bits needed
-    typedef duration<boost::int_least64_t, micro> microseconds;  // at least 55 bits needed
-    typedef duration<boost::int_least64_t, milli> milliseconds;  // at least 45 bits needed
-    typedef duration<boost::int_least64_t> seconds;              // at least 35 bits needed
-    typedef duration<boost::int_least32_t, ratio< 60> > minutes; // at least 29 bits needed
-    typedef duration<boost::int_least32_t, ratio<3600> > hours;  // at least 23 bits needed
+    typedef duration<boost::int_least64_t, nano> nanoseconds;           // at least 64 bits needed
+    typedef duration<boost::int_least64_t, micro> microseconds;         // at least 55 bits needed
+    typedef duration<boost::int_least64_t, milli> milliseconds;         // at least 45 bits needed
+    typedef duration<boost::int_least64_t> seconds;                     // at least 35 bits needed
+    typedef duration<boost::int_least32_t, boost::ratio< 60> > minutes; // at least 29 bits needed
+    typedef duration<boost::int_least32_t, boost::ratio<3600> > hours;  // at least 23 bits needed
 
 //----------------------------------------------------------------------------//
 //                          duration helpers                                  //
