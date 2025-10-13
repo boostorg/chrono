@@ -7745,7 +7745,7 @@ This operator is convenient for computing where in a time frame a given duration
 The following table presents a resume of which API is used for each clock on each platform
 [table Clock API correspondence
     [[Clock]                                [Windows Platform]          [Posix Platform]                 [Mac Platform]  ]
-    [[__system_clock]                     [GetSystemTimeAsFileTime]   [clock_gettime( CLOCK_REALTIME)] [gettimeofday]          ]
+    [[__system_clock]                     [GetSystemTimePreciseAsFileTime ]   [clock_gettime( CLOCK_REALTIME)] [gettimeofday]          ]
     [[__steady_clock]                  [QueryPerformanceCounter and QueryPerformanceFrequency]
                                         [clock_gettime( CLOCK_STEADY)] [mach_timebase_info,mach_absolute_time]          ]
     [[__process_real_cpu_clock]           [GetProcessTimes]           [times]                         [times]  ]
