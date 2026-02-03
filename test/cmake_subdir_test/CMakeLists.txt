@@ -28,6 +28,7 @@ winapi
 
 # Secondary dependencies
 
+compat
 preprocessor
 variant2
 io
