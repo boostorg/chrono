@@ -100,7 +100,7 @@ namespace chrono_detail
   system_clock::time_point system_clock::now() BOOST_NOEXCEPT
   {
     boost::winapi::FILETIME_ ft;
-    boost::winapi::GetSystemTimeAsFileTime( &ft );  // never fails
+    boost::winapi::GetSystemTimePreciseAsFileTime ( &ft );  // never fails
     return system_clock::time_point(
       system_clock::duration(
         ((static_cast<__int64>( ft.dwHighDateTime ) << 32) | ft.dwLowDateTime)
@@ -115,7 +115,7 @@ namespace chrono_detail
   system_clock::time_point system_clock::now( system::error_code & ec )
   {
     boost::winapi::FILETIME_ ft;
-    boost::winapi::GetSystemTimeAsFileTime( &ft );  // never fails
+    boost::winapi::GetSystemTimePreciseAsFileTime ( &ft );  // never fails
     if (!::boost::chrono::is_throws(ec))
     {
         ec.clear();
