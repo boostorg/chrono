@@ -1185,7 +1185,7 @@ When available, __high_resolution_clock is usually more expensive than the other
 
 [section process_cpu_clock]
 
-Process and thread clocks are used usually to measure the time spent by code blocks, as a basic time-spent profiling of different blocks of code (Boost.Chrono.Stopwatch is a clear example of this use).
+Process and thread clocks are used usually to measure the time spent by code blocks, as a basic time-spent profiling of different blocks of code.
 
 [endsect]
 
