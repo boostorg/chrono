@@ -117,6 +117,14 @@ int main()
     t -= 2;
     BOOST_TEST(t.time_since_epoch() == Duration(1));
   }
+  {
+    typedef boost::chrono::system_clock Clock;
+    typedef boost::chrono::milliseconds Duration1;
+    typedef boost::chrono::duration<uint32_t, boost::milli> Duration2;
+    boost::chrono::time_point<Clock, Duration1> t1(Duration1(0));
+    boost::chrono::time_point<Clock, Duration1> t2 = t1 - Duration2(1);
+    BOOST_TEST(t2.time_since_epoch() == Duration1(-1));
+  }
 #if 0
   {
     typedef boost::chrono::system_clock Clock;
