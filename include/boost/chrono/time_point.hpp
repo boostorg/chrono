@@ -271,7 +271,8 @@ namespace chrono {
     operator-(const time_point<Clock, Duration1>& lhs,
             const duration<Rep2, Period2>& rhs)
     {
-        return lhs + (-rhs);
+        typedef typename common_type<Duration1, duration<Rep2, Period2> >::type CDuration;
+        return time_point<Clock, CDuration>(lhs.time_since_epoch() - rhs);
     }
 
     // duration operator-(time_point x, time_point y);

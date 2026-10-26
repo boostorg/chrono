@@ -13,6 +13,8 @@
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <boost/cstdint.hpp>
+#include <limits>
 #ifdef BOOST_NO_CXX11_CONSTEXPR
 #define BOOST_CONSTEXPR_ASSERT(C) BOOST_TEST(C)
 #else
@@ -22,6 +24,39 @@
 
 int main()
 {
+  // Subtract after converting to the common duration, not by negating rhs first.
+  {
+    typedef boost::chrono::system_clock Clock;
+    typedef boost::chrono::duration<boost::int64_t, boost::nano> Nanoseconds;
+    typedef boost::chrono::duration<boost::uint32_t, boost::micro> UnsignedMicroseconds;
+    typedef boost::chrono::time_point<Clock, Nanoseconds> Point;
+    BOOST_CONSTEXPR Point epoch(Nanoseconds(0));
+    BOOST_CONSTEXPR Point earlier = epoch - UnsignedMicroseconds(1);
+    BOOST_CONSTEXPR_ASSERT(earlier.time_since_epoch() == Nanoseconds(-1000));
+    BOOST_TEST((Point(Nanoseconds(5000)) - UnsignedMicroseconds(1)).time_since_epoch()
+               == Nanoseconds(4000));
+    BOOST_TEST((epoch - UnsignedMicroseconds(0)).time_since_epoch() == Nanoseconds(0));
+    BOOST_TEST((epoch - UnsignedMicroseconds((std::numeric_limits<boost::uint32_t>::max)()))
+               .time_since_epoch() == Nanoseconds(-4294967295000LL));
+  }
+  {
+    typedef boost::chrono::system_clock Clock;
+    typedef boost::chrono::duration<boost::int64_t> WideDuration;
+    typedef boost::chrono::duration<boost::int32_t> NarrowDuration;
+    typedef boost::chrono::time_point<Clock, WideDuration> Point;
+    BOOST_CONSTEXPR Point epoch(WideDuration(0));
+    BOOST_CONSTEXPR Point later = epoch - NarrowDuration((std::numeric_limits<boost::int32_t>::min)());
+    BOOST_CONSTEXPR_ASSERT(later.time_since_epoch() == WideDuration(2147483648LL));
+  }
+  {
+    typedef boost::chrono::system_clock Clock;
+    typedef boost::chrono::duration<double> FloatingDuration;
+    typedef boost::chrono::duration<boost::uint32_t> UnsignedDuration;
+    typedef boost::chrono::time_point<Clock, FloatingDuration> Point;
+    BOOST_TEST((Point(FloatingDuration(0)) - UnsignedDuration(1)).time_since_epoch()
+               == FloatingDuration(-1));
+  }
+
   {
     typedef boost::chrono::system_clock Clock;
     typedef boost::chrono::milliseconds Duration;
